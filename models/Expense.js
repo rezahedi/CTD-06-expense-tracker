@@ -23,11 +23,6 @@ const ExpenseSchema = new mongoose.Schema({
     required: [true, 'Provide category of expense'],
     enum: ['Groceries', 'Rent', 'Entertainment', 'Transportation', 'Health', 'Utilities', 'Bills', 'Subscriptions', 'Other']
   },
-  createdAt: {
-    type: Date,
-    requiored: true,
-    default: Date.now,
-  },
 }, {
   timestamps: true
 })
