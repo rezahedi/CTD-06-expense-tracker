@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
 const getAllExpenses = async (req, res) => {
-  const expenses = await Expense.find({ userId: req.user.userId }).sort('createdAt')
+  const expenses = await Expense.find({ userId: req.user.userId }).populate('userId', 'name').sort('createdAt')
   res.status( StatusCodes.OK ).json({ expenses, count: expenses.length })
 }
 
