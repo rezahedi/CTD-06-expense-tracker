@@ -17,7 +17,7 @@ const authMiddleware = async (req, res, next) => {
 
     // Attach the user to the authorized route
     const user = await User.findById(payload.userId).select('-password')
-    req.user = user
+    req.user = { userId: user._id, name: user.name }
 
     next()
     
