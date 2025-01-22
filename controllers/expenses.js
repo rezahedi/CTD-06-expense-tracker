@@ -32,7 +32,37 @@ const createExpense = async (req, res) => {
 }
 
 const updateExpense = async (req, res) => {
-  res.send('create')
+  const {
+    body: { amount, title, description, category },
+    user: { userId },
+    params: { id: expenseId },
+  } = req;
+
+  if ( amount === undefined ) {
+    throw new BadRequestError('Amount field is required')
+  }
+
+  if ( title !== undefined && title === '' ) {
+    throw new BadRequestError('Title field is optional but cannot be empty')
+  }
+
+  const expense = await Expense.findByIdAndUpdate(
+    {
+      _id: expenseId,
+      userId
+    },
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  )
+
+  if ( !expense ) {
+    throw new NotFoundError(`No expense with id ${expenseId}`)
+  }
+
+  res.status( StatusCodes.OK ).json({ expense })
 }
 
 const deleteExpense = async (req, res) => {
