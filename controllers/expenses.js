@@ -8,7 +8,21 @@ const getAllExpenses = async (req, res) => {
 }
 
 const getExpense = async (req, res) => {
-  res.send('get one')
+  // const {user: {userId}, params:{id: expenseId}} = req
+  // Below lines are more readable than above commented line
+  const userId = req.user.userId
+  const expenseId = req.params.id
+
+  const expense = await Expense.findOne({
+    userId,
+    _id: expenseId
+  }).populate('userId', 'name')
+
+  if ( !expense ) {
+    throw new NotFoundError(`No expense with id ${expenseId}`)
+  }
+
+  res.status( StatusCodes.OK ).json({ expense })
 }
 
 const createExpense = async (req, res) => {
