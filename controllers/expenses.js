@@ -26,24 +26,27 @@ const getExpense = async (req, res) => {
 }
 
 const createExpense = async (req, res) => {
-  req.body.userId = req.user.userId
-  const expense = await Expense.create( req.body )
+  const userId = req.user.userId
+
+  const expense = await Expense.create(
+    {
+      ...req.body,
+      userId
+    }
+  )
   res.status( StatusCodes.CREATED ).json({ expense })
 }
 
 const updateExpense = async (req, res) => {
   const {
-    body: { amount, title, description, category },
+    body: { amount },
     user: { userId },
     params: { id: expenseId },
   } = req;
 
+  // TODO: Sometimes user need to update anything except the `amount`
   if ( amount === undefined ) {
     throw new BadRequestError('Amount field is required')
-  }
-
-  if ( title !== undefined && title === '' ) {
-    throw new BadRequestError('Title field is optional but cannot be empty')
   }
 
   const expense = await Expense.findByIdAndUpdate(
