@@ -9,9 +9,22 @@ const authMiddleware = require('./middleware/authMiddleware')
 // error handler
 const notFoundMiddleware = require('./middleware/notFoundMiddleware');
 const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
+// Security packages
+const helmet = require('helmet')
+const cors = require('cors')
+const xss = require('xss-clean')
+const rateLimiter = require('express-rate-limit')
+
+app.set('trust proxy', 1)
+app.use(rateLimiter({
+  windowMs: 1000, // 1 sec
+  max: 1, // limit each IP to 1 request per windowMs
+}))
 
 app.use(express.json());
-// extra packages
+app.use(helmet())
+app.use(cors())
+app.use(xss())
 
 // routes
 app.use('/api/v1/auth', authRouter);
