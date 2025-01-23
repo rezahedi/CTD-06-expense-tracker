@@ -9,7 +9,21 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   }
 
   // Check if error comes from Mongoose and which error code is
-  // 11000 = Duplicate value for unique field
+  // Mongoose cast error
+  if ( err.name === 'CastError' ) {
+    customError = {
+      msg: `Item not found with the id: ${err.value}`,
+      statusCode: StatusCodes.NOT_FOUND,
+    }
+  }
+  // Mongoose validation error
+  if ( err.name === 'ValidationError' ) {
+    customError = {
+      msg: `${Object.values(err.errors).map(item=>item.message).join(', ')}`,
+      statusCode: StatusCodes.BAD_REQUEST,
+    }
+  }
+  // Mongoose duplicate error
   if ( err.code && err.code === 11000 ) {
     customError = {
       msg: `Duplicate value entered for unique '${Object.keys(err.keyValue)[0]}' field, please use different value.`,
@@ -17,7 +31,6 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     }
   }
   
-  // return res.status( StatusCodes.INTERNAL_SERVER_ERROR ).json({ err })
   return res.status( customError.statusCode ).json({ msg: customError.msg })
 }
 
