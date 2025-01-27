@@ -7,22 +7,22 @@ import {
   setToken,
 } from "./index.js";
 import { showLoginRegister } from "./loginRegister.js";
-import { showJobs } from "./jobs.js";
+import { showExpenses } from "./expenses.js";
 
 let loginDiv = null;
 let email = null;
 let password = null;
 
 export const handleLogin = () => {
-  loginDiv = document.getElementById("logon-div");
+  loginDiv = document.getElementById("login-div");
   email = document.getElementById("email");
   password = document.getElementById("password");
-  const logonButton = document.getElementById("logon-button");
-  const logonCancel = document.getElementById("logon-cancel");
+  const loginButton = document.getElementById("login-button");
+  const loginCancel = document.getElementById("login-cancel");
 
   loginDiv.addEventListener("click", async (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
-      if (e.target === logonButton) {
+      if (e.target === loginButton) {
         enableInput(false);
 
         try {
@@ -39,13 +39,13 @@ export const handleLogin = () => {
 
           const data = await response.json();
           if (response.status === 200) {
-            message.textContent = `Logon successful.  Welcome ${data.user.name}`;
+            message.textContent = `login successful.  Welcome ${data.user.name}`;
             setToken(data.token);
 
             email.value = "";
             password.value = "";
 
-            showJobs();
+            showExpenses();
           } else {
             message.textContent = data.msg;
           }
@@ -55,7 +55,7 @@ export const handleLogin = () => {
         }
 
         enableInput(true);
-      } else if (e.target === logonCancel) {
+      } else if (e.target === loginCancel) {
         email.value = "";
         password.value = "";
         showLoginRegister();

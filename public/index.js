@@ -26,7 +26,7 @@ export const setToken = (value) => {
 
 export let message = null;
 
-import { showJobs, handleJobs } from "./jobs.js";
+import { showExpenses, handleExpenses } from "./expenses.js";
 import { showLoginRegister, handleLoginRegister } from "./loginRegister.js";
 import { handleLogin } from "./login.js";
 import { handleAddEdit } from "./addEdit.js";
@@ -37,11 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
   message = document.getElementById("message");
   handleLoginRegister();
   handleLogin();
-  handleJobs();
+  handleExpenses();
   handleRegister();
   handleAddEdit();
   if (token) {
-    showJobs();
+    showExpenses();
   } else {
     showLoginRegister();
   }

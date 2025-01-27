@@ -5,8 +5,8 @@ import { showRegister } from "./register.js";
 let loginRegisterDiv = null;
 
 export const handleLoginRegister = () => {
-  loginRegisterDiv = document.getElementById("logon-register");
-  const login = document.getElementById("logon");
+  loginRegisterDiv = document.getElementById("login-register");
+  const login = document.getElementById("login");
   const register = document.getElementById("register");
 
   loginRegisterDiv.addEventListener("click", (e) => {
