@@ -5,6 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expenses List</title>
+<style>
+table{
+  width:100%;
+  margin:1rem 0;
+}
+tr td:first-child{
+  width: 100%;
+  text-wrap: balance;
+}
+th, td{
+  background-color: rgb(163, 206, 241);
+}
+th, td{
+  padding:.5rem 1rem;
+  text-wrap:nowrap;
+}
+</style>
   </head>
 
   <body>
@@ -59,7 +76,7 @@
           <th>Title</th>
           <th>Amount</th>
           <th>Category</th>
-          <th colspan="2"></th>
+          <th colspan="2">Actions</th>
         </tr>
       </table>
       <button type="button" id="add-expense">add expense</button>

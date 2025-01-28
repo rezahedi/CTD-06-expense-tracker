@@ -95,13 +95,13 @@ export const showExpenses = async () => {
           const expense = data.expenses[i]
           let rowEntry = document.createElement("tr");
 
-          let editButton = `<td><button type="button" class="editButton" data-id=${expense._id}>edit</button></td>`;
-          let deleteButton = `<td><button type="button" class="deleteButton" data-id=${expense._id}>delete</button></td>`;
+          let editButton = `<button type="button" class="editButton" data-id=${expense._id}>edit</button>`;
+          let deleteButton = `<button type="button" class="deleteButton" data-id=${expense._id}>delete</button>`;
           let rowHTML = `
             <td>${expense.title}</td>
-            <td>${expense.amount}</td>
+            <td>$${expense.amount} USD</td>
             <td>${expense.category}</td>
-            <div>${editButton}${deleteButton}</div>`;
+            <td>${editButton} ${deleteButton}</td>`;
 
           rowEntry.innerHTML = rowHTML;
           children.push(rowEntry);
