@@ -101,6 +101,8 @@ export const showExpenses = async () => {
             <td>${expense.title}</td>
             <td>$${expense.amount} USD</td>
             <td>${expense.category}</td>
+            <td>${new Date(expense.createdAt).toDateString()}</td>
+            <td>${new Date(expense.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;
 
           rowEntry.innerHTML = rowHTML;
