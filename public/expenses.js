@@ -38,5 +38,47 @@ export const handleExpenses = () => {
 };
 
 export const showExpenses = async () => {
+  try {
+    enableInput(false);
+
+    const response = await fetch("/api/v1/expenses", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    let children = [expensesTableHeader];
+
+    if (response.status === 200) {
+      if (data.count === 0) {
+        expensesTable.replaceChildren(...children); // clear this for safety
+      } else {
+        for (let i = 0; i < data.expenses.length; i++) {
+          let rowEntry = document.createElement("tr");
+
+          let editButton = `<td><button type="button" class="editButton" data-id=${data.expenses[i]._id}>edit</button></td>`;
+          let deleteButton = `<td><button type="button" class="deleteButton" data-id=${data.expenses[i]._id}>delete</button></td>`;
+          let rowHTML = `
+            <td>${data.expenses[i].title}</td>
+            <td>${data.expenses[i].amount}</td>
+            <td>${data.expenses[i].category}</td>
+            <div>${editButton}${deleteButton}</div>`;
+
+          rowEntry.innerHTML = rowHTML;
+          children.push(rowEntry);
+        }
+        expensesTable.replaceChildren(...children);
+      }
+    } else {
+      message.textContent = data.msg;
+    }
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communication error occurred.";
+  }
+  enableInput(true);
   setDiv(expensesDiv);
 };
