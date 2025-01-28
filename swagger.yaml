@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  title: Expense API
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://ctd-rezahedi-expense-tracker.onrender.com/api/v1
+    variables: {}
+  - url: http://localhost:3000/api/v1
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register User
+      operationId: RegisterUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+            example:
+              name: bob
+              email: bob@gmail.com
+              password: secret
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      operationId: LoginUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+            example:
+              email: r.zahedi@gmail.com
+              password: reza4321
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /expenses:
+    post:
+      tags:
+        - Expenses
+      summary: Create Expense
+      operationId: CreateExpense
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExpenseRequest'
+            example:
+              amount: 100
+              title: Trader Joe's grocery shopping
+              description: Grocery shopping for the first week of Jan 25
+              category: Groceries
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    get:
+      tags:
+        - Expenses
+      summary: Get All Expenses
+      operationId: GetAllExpenses
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /expenses/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The expense ID
+    get:
+      tags:
+        - Expenses
+      summary: Get Single Expense
+      operationId: GetSingleExpense
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+
+    patch:
+      tags:
+        - Expenses
+      summary: Update Expense
+      operationId: UpdateExpense
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateExpenseRequest'
+            example:
+              amount: 100
+              title: Paying the student debt
+              description: A description about paying debt
+              category: Bills
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+        - Expenses
+      summary: Delete Expense
+      operationId: DeleteExpense
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    RegisterUserRequest:
+      title: RegisterUserRequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: bob
+        email: bob@gmail.com
+        password: secret
+    LoginUserRequest:
+      title: LoginUserRequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: r.zahedi@gmail.com
+        password: reza4321
+    CreateExpenseRequest:
+      title: CreateExpenseRequest
+      required:
+        - amount
+        - title
+        - category
+      type: object
+      properties:
+        amount:
+          type: number
+        title:
+          type: string
+        category:
+          type: string
+      example:
+        amount: 299
+        title: Internet bill payment
+        category: Bills
+    UpdateExpenseRequest:
+      title: UpdateExpenseRequest
+      required:
+        - amount
+      type: object
+      properties:
+        amount:
+          type: number
+      example:
+        amount: 199
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+  - httpBearer: []
+tags:
+  - name: Auth
+    description: ''
+  - name: Expenses
+    description: ''
