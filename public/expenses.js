@@ -37,13 +37,15 @@ export const handleExpenses = () => {
         showAddEdit(e.target.dataset.id);
       } else if (e.target.classList.contains("deleteButton")) {
         message.textContent = "";
-        handleDelete(e.target.dataset.id);
+        e.target.disabled = true;
+        e.target.innerHTML = 'Deleting ...'
+        handleDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
       }
     }
   });
 };
 
-const handleDelete = async (expenseId) => {
+const handleDelete = async (expenseId, onDeleteAction) => {
   try {
     const response = await fetch(`/api/v1/expenses/${expenseId}`, {
       method: "DELETE",
@@ -55,7 +57,7 @@ const handleDelete = async (expenseId) => {
 
     if (response.status === 200) {
       message.textContent = "The expense entry was removed.";
-      showExpenses();
+      onDeleteAction();
     } else {
       const data = await response.json();
       throw new Error(data.msg)
