@@ -24,6 +24,12 @@ export const handleAddEdit = () => {
   
         let method = "POST";
         let url = "/api/v1/expenses";
+
+        if (addingExpense.textContent === "update") {
+          method = "PATCH";
+          url += `/${addEditDiv.dataset.id}`;
+        }
+
         try {
           const response = await fetch(url, {
             method: method,
@@ -40,9 +46,9 @@ export const handleAddEdit = () => {
           });
   
           const data = await response.json();
-          if (response.status === 201) {
-            // 201 indicates a successful create
-            message.textContent = "The expense entry was created.";
+          if (response.status === 200 || response.status === 201) {
+            // success codes: 201 = create / 200 = update
+            message.textContent = (response.status === 200 ? "The expense entry was updated." : "The expense entry was created.");
   
             title.value = "";
             amount.value = "";
