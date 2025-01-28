@@ -67,7 +67,50 @@ export const handleAddEdit = () => {
   });
 };
 
-export const showAddEdit = (expense) => {
-  message.textContent = "";
-  setDiv(addEditDiv);
+export const showAddEdit = async (expenseId) => {
+  if (!expenseId) {
+    title.value = "";
+    amount.value = "";
+    description.value = "";
+    category.value = "";
+    addingExpense.textContent = "add";
+    message.textContent = "";
+
+    setDiv(addEditDiv);
+  } else {
+    enableInput(false);
+
+    try {
+      const response = await fetch(`/api/v1/expenses/${expenseId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        title.value = data.expense.title;
+        amount.value = data.expense.amount;
+        description.value = data.expense.description;
+        category.value = data.expense.category;
+        addingExpense.textContent = "update";
+        message.textContent = "";
+        addEditDiv.dataset.id = expenseId;
+
+        setDiv(addEditDiv);
+      } else {
+        // might happen if the list has been updated since last display
+        message.textContent = "The Expense entry was not found";
+        showExpenses();
+      }
+    } catch (err) {
+      console.log(err);
+      message.textContent = "A communications error has occurred.";
+      showExpenses();
+    }
+
+    enableInput(true);
+  }
 };
