@@ -46,6 +46,8 @@ export const handleExpenses = () => {
 };
 
 const handleDelete = async (expenseId, onDeleteAction) => {
+  enableInput(false);
+
   try {
     const response = await fetch(`/api/v1/expenses/${expenseId}`, {
       method: "DELETE",
@@ -66,6 +68,8 @@ const handleDelete = async (expenseId, onDeleteAction) => {
     console.log(err);
     message.textContent = "A communication error occurred.";
   }
+
+  enableInput(true);
 }
 
 export const showExpenses = async () => {
