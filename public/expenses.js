@@ -25,6 +25,12 @@ export const handleExpenses = () => {
       if (e.target === addExpense) {
         showAddEdit(null);
       } else if (e.target === logoff) {
+        setToken(null);
+
+        message.textContent = "You have been logged off.";
+
+        expensesTable.replaceChildren([jobsTableHeader]);
+
         showLoginRegister();
       }
     }

@@ -56,9 +56,9 @@
       <p id="expenses-message"></p>
       <table id="expenses-table">
         <tr id="expenses-table-header">
-          <th>Company</th>
-          <th>Position</th>
-          <th>Status</th>
+          <th>Title</th>
+          <th>Amount</th>
+          <th>Category</th>
           <th colspan="2"></th>
         </tr>
       </table>
@@ -68,19 +68,30 @@
     <div id="edit-expense" style="display:none;">
       <form>
         <div>
-          <label for="company">company:</label>
-          <input type="text" id="company" />
+          <label for="title">Title:</label>
+          <input type="text" id="title" />
         </div>
         <div>
-          <label for="position">position:</label>
-          <input type="text" id="position" />
+          <label for="amount">Amount:</label>
+          <input type="text" id="amount" />
         </div>
         <div>
-          <label for="status">status:</label>
-          <select id="status">
-            <option value="pending">pending</option>
-            <option value="interview">interview</option>
-            <option value="declined">declined</option>
+          <label for="description">Description:</label>
+          <textarea id="description" rows="4"></textarea>
+        </div>
+        <div>
+          <label for="category">Category:</label>
+          <select id="category">
+            <option value="">Select a category</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Rent">Rent</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Health">Health</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Bills">Bills</option>
+            <option value="Subscriptions">Subscriptions</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <button type="button" id="adding-expense">add</button>

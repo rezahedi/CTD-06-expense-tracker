@@ -2,24 +2,65 @@ import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
 import { showExpenses } from "./expenses.js";
 
 let addEditDiv = null;
-let company = null;
-let position = null;
-let status = null;
+let title = null;
+let amount = null;
+let description = null;
+let category = null;
 let addingExpense = null;
 
 export const handleAddEdit = () => {
   addEditDiv = document.getElementById("edit-expense");
-  company = document.getElementById("company");
-  position = document.getElementById("position");
-  status = document.getElementById("status");
+  title = document.getElementById("title");
+  amount = document.getElementById("amount");
+  description = document.getElementById("description");
+  category = document.getElementById("category");
   addingExpense = document.getElementById("adding-expense");
   const editCancel = document.getElementById("edit-cancel");
 
-  addEditDiv.addEventListener("click", (e) => {
+  addEditDiv.addEventListener("click", async (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if (e.target === addingExpense) {
-        showExpenses();
+        enableInput(false);
+  
+        let method = "POST";
+        let url = "/api/v1/expenses";
+        try {
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: title.value,
+              amount: amount.value,
+              description: description.value,
+              category: category.value,
+            }),
+          });
+  
+          const data = await response.json();
+          if (response.status === 201) {
+            // 201 indicates a successful create
+            message.textContent = "The expense entry was created.";
+  
+            title.value = "";
+            amount.value = "";
+            description.value = "";
+            category.value = "";
+  
+            showExpenses();
+          } else {
+            message.textContent = data.msg;
+          }
+        } catch (err) {
+          console.log(err);
+          message.textContent = "A communication error occurred.";
+        }
+  
+        enableInput(true);
       } else if (e.target === editCancel) {
+        message.textContent = "";
         showExpenses();
       }
     }
