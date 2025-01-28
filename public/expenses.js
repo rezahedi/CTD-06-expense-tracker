@@ -57,14 +57,15 @@ export const showExpenses = async () => {
         expensesTable.replaceChildren(...children); // clear this for safety
       } else {
         for (let i = 0; i < data.expenses.length; i++) {
+          const expense = data.expenses[i]
           let rowEntry = document.createElement("tr");
 
-          let editButton = `<td><button type="button" class="editButton" data-id=${data.expenses[i]._id}>edit</button></td>`;
-          let deleteButton = `<td><button type="button" class="deleteButton" data-id=${data.expenses[i]._id}>delete</button></td>`;
+          let editButton = `<td><button type="button" class="editButton" data-id=${expense._id}>edit</button></td>`;
+          let deleteButton = `<td><button type="button" class="deleteButton" data-id=${expense._id}>delete</button></td>`;
           let rowHTML = `
-            <td>${data.expenses[i].title}</td>
-            <td>${data.expenses[i].amount}</td>
-            <td>${data.expenses[i].category}</td>
+            <td>${expense.title}</td>
+            <td>${expense.amount}</td>
+            <td>${expense.category}</td>
             <div>${editButton}${deleteButton}</div>`;
 
           rowEntry.innerHTML = rowHTML;
