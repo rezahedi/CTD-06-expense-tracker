@@ -35,10 +35,36 @@ export const handleExpenses = () => {
       } else if (e.target.classList.contains("editButton")) {
         message.textContent = "";
         showAddEdit(e.target.dataset.id);
+      } else if (e.target.classList.contains("deleteButton")) {
+        message.textContent = "";
+        handleDelete(e.target.dataset.id);
       }
     }
   });
 };
+
+const handleDelete = async (expenseId) => {
+  try {
+    const response = await fetch(`/api/v1/expenses/${expenseId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      message.textContent = "The expense entry was removed.";
+      showExpenses();
+    } else {
+      const data = await response.json();
+      throw new Error(data.msg)
+    }
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communication error occurred.";
+  }
+}
 
 export const showExpenses = async () => {
   try {
