@@ -12,7 +12,9 @@ const ExpenseSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    maxlength: 50,
+    required: [true, 'Provide title between 3 to 50 char length'],
+    minlength: [3, 'Title min length is 3'],
+    maxlength: [50, 'Title max length is 50'],
   },
   description: {
     type: String,
