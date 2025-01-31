@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expenses List</title>
+<style>
+table{
+  width:100%;
+  margin:1rem 0;
+}
+tr td:first-child{
+  width: 100%;
+  text-wrap: balance;
+}
+th, td{
+  background-color: rgb(163, 206, 241);
+}
+th, td{
+  padding:.5rem 1rem;
+  text-wrap:nowrap;
+}
+</style>
+  </head>
+
+  <body>
+    <h1>Expenses List</h1>
+    <hr />
+    <p id="message"></p>
+    <hr />
+    <div id="login-register" style="display:none;">
+      <button type="button" id="login">login</button>
+      <button type="button" id="register">register</button>
+    </div>
+    <div id="login-div" style="display:none;">
+      <form>
+        <div>
+          <label for="email">email:</label>
+          <input type="email" id="email" />
+        </div>
+        <div>
+          <label for="password">password:</label>
+          <input type="password" id="password" />
+        </div>
+        <button type="button" id="login-button">login</button>
+        <button type="button" id="login-cancel">cancel</button>
+      </form>
+    </div>
+    <div id="register-div" style="display:none;">
+      <form>
+        <div>
+          <label for="name">name:</label>
+          <input type="text" id="name" />
+        </div>
+        <div>
+          <label for="email1">email:</label>
+          <input type="email" id="email1" />
+        </div>
+        <div>
+          <label for="password1">password:</label>
+          <input type="password" id="password1" />
+        </div>
+        <div>
+          <label for="password2">verify password:</label>
+          <input type="password" id="password2" />
+        </div>
+        <button type="button" id="register-button">register</button>
+        <button type="button" id="register-cancel">cancel</button>
+      </form>
+    </div>
+    <div id="expenses" style="display:none;">
+      <p id="expenses-message"></p>
+      <table id="expenses-table">
+        <tr id="expenses-table-header">
+          <th>Title</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Created At</th>
+          <th>Modified At</th>
+          <th colspan="2">Actions</th>
+        </tr>
+      </table>
+      <button type="button" id="add-expense">add expense</button>
+      <button type="button" id="logoff">log off</button>
+    </div>
+    <div id="edit-expense" style="display:none;">
+      <form>
+        <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" />
+        </div>
+        <div>
+          <label for="amount">Amount:</label>
+          <input type="text" id="amount" />
+        </div>
+        <div>
+          <label for="description">Description:</label>
+          <textarea id="description" rows="4"></textarea>
+        </div>
+        <div>
+          <label for="category">Category:</label>
+          <select id="category">
+            <option value="">Select a category</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Rent">Rent</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Health">Health</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Bills">Bills</option>
+            <option value="Subscriptions">Subscriptions</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <button type="button" id="adding-expense">add</button>
+        <button type="button" id="edit-cancel">cancel</button>
+      </form>
+    </div>
+    <script src="./index.js" type="module"></script>
+  </body>
+</html>

@@ -32,9 +32,10 @@ app.use(cors())
 app.use(xss())
 
 // routes
-app.get('/', (req, res) => {
-  res.send('<h1>Expense API</h1><p><a href="/api-docs">The API Documentation</a></p>')
-})
+app.use('/', express.static('./public'))
+// app.get('/', (req, res) => {
+//   res.send('<h1>Expense API</h1><p><a href="/api-docs">The API Documentation</a></p>')
+// })
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 app.use('/api/v1/auth', authRouter);
