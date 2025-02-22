@@ -100,7 +100,7 @@ export const showExpenses = async () => {
           let rowHTML = `
             <td>${expense.title}</td>
             <td>$${expense.amount} USD</td>
-            <td>${expense.category}</td>
+            <td>${expense.category?.title || 'No Category'}</td>
             <td>${new Date(expense.createdAt).toDateString()}</td>
             <td>${new Date(expense.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;

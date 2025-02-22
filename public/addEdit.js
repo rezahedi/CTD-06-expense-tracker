@@ -41,6 +41,7 @@ export const handleAddEdit = () => {
               title: title.value,
               amount: amount.value,
               description: description.value,
+              // FIXME: if category wasn't set on form don't add category as an object's property
               category: category.value,
             }),
           });
@@ -87,6 +88,14 @@ export const showAddEdit = async (expenseId) => {
     enableInput(false);
 
     try {
+      // Get categories
+      const { categories } = await fetch(`/api/v1/categories`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(data => data.json())
+      
       const response = await fetch(`/api/v1/expenses/${expenseId}`, {
         method: "GET",
         headers: {
@@ -100,10 +109,19 @@ export const showAddEdit = async (expenseId) => {
         title.value = data.expense.title;
         amount.value = data.expense.amount;
         description.value = data.expense.description;
-        category.value = data.expense.category;
+        // category.value = data.expense.category;
         addingExpense.textContent = "update";
         message.textContent = "";
         addEditDiv.dataset.id = expenseId;
+        //Empty prev added cats to select/options
+        category.innerHTML = '';
+        [{title:'Select a category', _id:''}, ...categories].forEach(cat => {
+          const optionElement = document.createElement('option')
+          optionElement.text = cat.title
+          optionElement.value = cat._id
+          optionElement.selected = (cat._id == data.expense.category?._id)
+          category.appendChild(optionElement)
+        });
 
         setDiv(addEditDiv);
       } else {
