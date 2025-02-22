@@ -31,19 +31,20 @@ export const handleAddEdit = () => {
         }
 
         try {
+          const bodyObject = {
+            title: title.value,
+            amount: amount.value,
+            description: description.value,
+          }
+          if(category.value) bodyObject.category = category.value
+
           const response = await fetch(url, {
             method: method,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              title: title.value,
-              amount: amount.value,
-              description: description.value,
-              // FIXME: if category wasn't set on form don't add category as an object's property
-              category: category.value,
-            }),
+            body: JSON.stringify(bodyObject),
           });
   
           const data = await response.json();
