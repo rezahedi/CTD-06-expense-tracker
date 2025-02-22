@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const authRouter = require('./routes/auth')
 const expensesRouter = require('./routes/expenses')
+const categoriesRouter = require('./routes/categories')
 const connectDB = require('./db/connect')
 const authMiddleware = require('./middleware/authMiddleware')
 // error handler
@@ -40,6 +41,7 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/expenses', authMiddleware, expensesRouter)
+app.use('/api/v1/categories', authMiddleware, categoriesRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
