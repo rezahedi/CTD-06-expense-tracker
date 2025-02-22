@@ -49,6 +49,10 @@ const updateExpense = async (req, res) => {
     throw new BadRequestError('Amount field is required')
   }
 
+  // Unset category if undefined
+  if( req.body.category === undefined )
+    req.body.$unset = {category: 1}
+
   const expense = await Expense.findByIdAndUpdate(
     {
       _id: expenseId,
