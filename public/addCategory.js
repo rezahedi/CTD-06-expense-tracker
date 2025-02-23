@@ -11,6 +11,8 @@ export const handleCategory = async () => {
 
     const title = prompt('New Category:')
 
+    if(!title) return;
+
     let method = "POST";
     let url = "/api/v1/categories";
 
