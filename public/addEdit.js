@@ -76,27 +76,22 @@ export const handleAddEdit = () => {
 };
 
 export const showAddEdit = async (expenseId) => {
-  if (!expenseId) {
-    title.value = "";
-    amount.value = "";
-    description.value = "";
-    category.value = "";
-    addingExpense.textContent = "add";
-    message.textContent = "";
+  try {
+    const categories = await getCategories();
 
-    setDiv(addEditDiv);
-  } else {
-    enableInput(false);
+    if (!expenseId) {
+      title.value = "";
+      amount.value = "";
+      description.value = "";
+      addingExpense.textContent = "add";
+      message.textContent = "";
+  
+      createCategorySelectElement(categories)
 
-    try {
-      // Get categories
-      const { categories } = await fetch(`/api/v1/categories`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(data => data.json())
-      
+      setDiv(addEditDiv);
+    } else {
+      enableInput(false);
+
       const response = await fetch(`/api/v1/expenses/${expenseId}`, {
         method: "GET",
         headers: {
@@ -114,15 +109,8 @@ export const showAddEdit = async (expenseId) => {
         addingExpense.textContent = "update";
         message.textContent = "";
         addEditDiv.dataset.id = expenseId;
-        //Empty prev added cats to select/options
-        category.innerHTML = '';
-        [{title:'Select a category', _id:''}, ...categories].forEach(cat => {
-          const optionElement = document.createElement('option')
-          optionElement.text = cat.title
-          optionElement.value = cat._id
-          optionElement.selected = (cat._id == data.expense.category?._id)
-          category.appendChild(optionElement)
-        });
+
+        createCategorySelectElement(categories, data.expense.category?._id || '')
 
         setDiv(addEditDiv);
       } else {
@@ -130,12 +118,43 @@ export const showAddEdit = async (expenseId) => {
         message.textContent = "The Expense entry was not found";
         showExpenses();
       }
-    } catch (err) {
-      console.log(err);
-      message.textContent = "A communications error has occurred.";
-      showExpenses();
-    }
 
-    enableInput(true);
+      enableInput(true);
+    }
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communications error has occurred.";
+    showExpenses();
   }
+
 };
+
+// Get categories
+const getCategories = async () => {
+  const { categories } = await fetch(`/api/v1/categories`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(data => data.json())
+
+  return categories
+}
+
+const createCategorySelectElement = (categories, selectedId='') => {
+  const defaultOption = {
+    title:'Select a category',
+    _id:''
+  }
+
+  //Empty previous added cats to select/options
+  category.innerHTML = '';
+
+  [defaultOption, ...categories].forEach(cat => {
+    const optionElement = document.createElement('option')
+    optionElement.text = cat.title
+    optionElement.value = cat._id
+    optionElement.selected = (cat._id == selectedId)
+    category.appendChild(optionElement)
+  });
+}
