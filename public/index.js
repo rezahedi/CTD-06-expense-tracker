@@ -27,6 +27,7 @@ export const setToken = (value) => {
 export let message = null;
 
 import { showExpenses, handleExpenses } from "./expenses.js";
+import { showCategories, handleCategories } from "./categories.js";
 import { showLoginRegister, handleLoginRegister } from "./loginRegister.js";
 import { handleLogin } from "./login.js";
 import { handleAddEdit } from "./addEdit.js";
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleLoginRegister();
   handleLogin();
   handleExpenses();
+  handleCategories()
   handleRegister();
   handleAddEdit();
   handleCategory();

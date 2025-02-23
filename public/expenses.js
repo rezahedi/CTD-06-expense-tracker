@@ -8,13 +8,16 @@ import {
 } from "./index.js";
 import { showLoginRegister } from "./loginRegister.js";
 import { showAddEdit } from "./addEdit.js";
+import { showCategories } from "./categories.js";
 
 let expensesDiv = null;
 let expensesTable = null;
 let expensesTableHeader = null;
+let showCategoriesBtn = null;
 
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
+  showCategoriesBtn = document.getElementById("show-categories")
   const logoff = document.getElementById("logoff");
   const addExpense = document.getElementById("add-expense");
   expensesTable = document.getElementById("expenses-table");
@@ -22,7 +25,9 @@ export const handleExpenses = () => {
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
-      if (e.target === addExpense) {
+      if(e.target === showCategoriesBtn) {
+        showCategories()
+      } else if (e.target === addExpense) {
         showAddEdit(null);
       } else if (e.target === logoff) {
         setToken(null);

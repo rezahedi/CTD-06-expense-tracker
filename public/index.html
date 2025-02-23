@@ -70,7 +70,7 @@ th, td{
       </form>
     </div>
     <div id="expenses" style="display:none;">
-      <p id="expenses-message"></p>
+      <button id="show-categories">Show Categories</button>
       <table id="expenses-table">
         <tr id="expenses-table-header">
           <th>Title</th>
@@ -107,6 +107,21 @@ th, td{
         <button type="button" id="adding-expense">add</button>
         <button type="button" id="edit-cancel">cancel</button>
       </form>
+    </div>
+
+    <div id="categories" style="display:none;">
+      <button id="show-expenses">Show Expense</button>
+      <table id="categories-table">
+        <tr id="categories-table-header">
+          <th>Title</th>
+          <th>Records</th>
+          <th>Created At</th>
+          <th>Modified At</th>
+          <th colspan="2">Actions</th>
+        </tr>
+      </table>
+      <button type="button" id="add-category">add category</button>
+      <button type="button" id="logoff">log off</button>
     </div>
     <script src="./index.js" type="module"></script>
   </body>
