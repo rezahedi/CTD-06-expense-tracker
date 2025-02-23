@@ -1,4 +1,4 @@
-import { token } from "./index.js";
+import { message, token } from "./index.js";
 let addCategoryButton = null
 let categorySelectElement = null
 
@@ -9,9 +9,12 @@ export const handleCategory = async () => {
   addCategoryButton.addEventListener("click", async (e) => {
     e.preventDefault()
 
-    const title = prompt('New Category:')
+    const title = (prompt('New Category:') || '').trim()
 
     if(!title) return;
+    // Match value with any chars length between 3 - 30 chars only
+    if(!title.match(/^.{3,30}$/))
+      return message.textContent = "Category's name should be between 3 - 30 chars!"
 
     let method = "POST";
     let url = "/api/v1/categories";
