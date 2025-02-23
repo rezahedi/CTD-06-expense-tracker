@@ -30,6 +30,7 @@ import { showExpenses, handleExpenses } from "./expenses.js";
 import { showLoginRegister, handleLoginRegister } from "./loginRegister.js";
 import { handleLogin } from "./login.js";
 import { handleAddEdit } from "./addEdit.js";
+import { handleCategory } from "./addCategory.js";
 import { handleRegister } from "./register.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleExpenses();
   handleRegister();
   handleAddEdit();
+  handleCategory();
   if (token) {
     showExpenses();
   } else {
