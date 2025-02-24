@@ -187,3 +187,30 @@ export const createOptionElement = (text='', value='', selected=false, selectEle
   optionElement.selected = selected
   selectElement.appendChild(optionElement)
 }
+
+export const handleCategoryDelete = async (categoryId, onDeleteAction) => {
+  enableInput(false);
+
+  try {
+    const response = await fetch(`/api/v1/categories/${categoryId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      message.textContent = "The category entry was removed.";
+      onDeleteAction();
+    } else {
+      const data = await response.json();
+      throw new Error(data.msg)
+    }
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communication error occurred.";
+  }
+
+  enableInput(true);
+}
