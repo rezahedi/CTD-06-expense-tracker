@@ -1,7 +1,10 @@
 const Category = require('../models/Category')
 const { StatusCodes } = require('http-status-codes')
+const DEFAULT_SORT = 'title'
 
 const getCategories = async (req, res) => {
+  const { sort=DEFAULT_SORT } = req.query
+
   const categories = await Category.aggregate([
     {
       // Always filter by logged in userId
@@ -19,12 +22,9 @@ const getCategories = async (req, res) => {
       $addFields: {
         expenses: { $size: '$expenses'} // Count number of expenses
       }
-    },
-    {
-      $sort: { title: 1 } // Sort by title
     }
-  ])
-  // const categories = await Category.find({ userId: req.user.userId }).populate('userId', 'name').sort('title')
+  ]).sort(sort)
+
   res.status( StatusCodes.OK ).json({ categories, count: categories.length })
 }
 

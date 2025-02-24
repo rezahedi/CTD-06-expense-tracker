@@ -1,4 +1,4 @@
-import { showExpenses } from "./expenses.js";
+import { showExpenses, toggleSort } from "./expenses.js";
 import {
   setDiv,
   message,
@@ -6,11 +6,14 @@ import {
   enableInput,
   inputEnabled,
 } from "./index.js";
+const CATEGORY_DEFAULT_SORT = 'title'
 
 let categoriesDiv = null;
 let categoriesTable = null;
 let categoriesTableHeader = null;
 let showExpensesBtn = null;
+let sortTitle = null;
+let sort = CATEGORY_DEFAULT_SORT;
 
 export const handleCategories = () => {
   categoriesDiv = document.getElementById("categories")
@@ -18,6 +21,7 @@ export const handleCategories = () => {
   const addCategory = document.getElementById("add-category");
   categoriesTable = document.getElementById("categories-table");
   categoriesTableHeader = document.getElementById("categories-table-header");
+  sortTitle = document.getElementById('sort-title')
 
   categoriesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -35,6 +39,10 @@ export const handleCategories = () => {
         e.target.disabled = true;
         e.target.innerHTML = 'Deleting ...'
         handleCategoryDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
+      } else if (e.target === sortTitle) {
+        sort = sort.includes('title') ? toggleSort(sort) : 'title'
+        sortTitle.textContent = sort==='title' ? 'Title ▼' : 'Title ▲'
+        showCategories()
       }
     }
   })
@@ -44,7 +52,11 @@ export const showCategories = async () => {
   try {
     enableInput(false);
 
-    const response = await fetch("/api/v1/categories", {
+    // Sort
+    const params = new URLSearchParams();
+    params.append('sort', sort)
+
+    const response = await fetch(`/api/v1/categories?${params}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

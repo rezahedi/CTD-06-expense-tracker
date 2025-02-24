@@ -149,6 +149,6 @@ export const showExpenses = async () => {
   setDiv(expensesDiv);
 };
 
-const toggleSort = (sort) => {
+export const toggleSort = (sort) => {
   return sort.startsWith('-') ? sort.slice(1) : `-${sort}`
 }
