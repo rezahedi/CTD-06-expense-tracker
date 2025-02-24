@@ -9,11 +9,15 @@ import {
 import { showLoginRegister } from "./loginRegister.js";
 import { showAddEdit } from "./addEdit.js";
 import { showCategories } from "./categories.js";
+const EXPENSE_DEFAULT_SORT = 'createdAt'
 
 let expensesDiv = null;
 let expensesTable = null;
 let expensesTableHeader = null;
 let showCategoriesBtn = null;
+let sortCreatedAt = null;
+let sortUpdatedAt = null;
+let sort = EXPENSE_DEFAULT_SORT;
 
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
@@ -22,6 +26,8 @@ export const handleExpenses = () => {
   const addExpense = document.getElementById("add-expense");
   expensesTable = document.getElementById("expenses-table");
   expensesTableHeader = document.getElementById("expenses-table-header");
+  sortCreatedAt = document.getElementById('sort-createdAt')
+  sortUpdatedAt = document.getElementById('sort-updatedAt')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -47,6 +53,17 @@ export const handleExpenses = () => {
         e.target.disabled = true;
         e.target.innerHTML = 'Deleting ...'
         handleDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
+
+      } else if (e.target === sortCreatedAt) {
+        sort = sort.includes('createdAt') ? toggleSort(sort) : 'createdAt'
+        sortCreatedAt.textContent = sort==='createdAt' ? 'Created At ▼' : 'Created At ▲'
+        sortUpdatedAt.textContent = 'Modified At'
+        showExpenses()
+      } else if (e.target === sortUpdatedAt) {
+        sort = sort.includes('updatedAt') ? toggleSort(sort) : 'updatedAt'
+        sortUpdatedAt.textContent = sort==='updatedAt' ? 'Modified At ▼' : 'Modified At ▲'
+        sortCreatedAt.textContent = 'Created At'
+        showExpenses()
       }
     }
   });
@@ -83,7 +100,11 @@ export const showExpenses = async () => {
   try {
     enableInput(false);
 
-    const response = await fetch("/api/v1/expenses", {
+    // Sort
+    const params = new URLSearchParams();
+    params.append('sort', sort)
+
+    const response = await fetch(`/api/v1/expenses?${params}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -127,3 +148,7 @@ export const showExpenses = async () => {
   enableInput(true);
   setDiv(expensesDiv);
 };
+
+const toggleSort = (sort) => {
+  return sort.startsWith('-') ? sort.slice(1) : `-${sort}`
+}
