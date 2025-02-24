@@ -5,7 +5,9 @@ import {
   token,
   enableInput,
   inputEnabled,
+  setToken,
 } from "./index.js";
+import { showLoginRegister } from "./loginRegister.js";
 const CATEGORY_DEFAULT_SORT = 'title'
 
 let categoriesDiv = null;
@@ -39,6 +41,7 @@ export const handleCategories = () => {
         e.target.disabled = true;
         e.target.innerHTML = 'Deleting ...'
         handleCategoryDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
+
       } else if (e.target === sortTitle) {
         sort = sort.includes('title') ? toggleSort(sort) : 'title'
         sortTitle.textContent = sort==='title' ? 'Title ▼' : 'Title ▲'
@@ -46,6 +49,12 @@ export const handleCategories = () => {
 
       } else if (e.target.classList.contains("filter-by-category")) { // Show expenses linked to the clicked category
         showExpensesByCategory(e.target.dataset.id, e.target.dataset.title)
+      
+      } else if (e.target.classList.contains("logoff")) {
+        setToken(null);
+        message.textContent = "You have been logged off.";
+        categoriesTable.replaceChildren([categoriesTableHeader]);
+        showLoginRegister();
       }
     }
   })

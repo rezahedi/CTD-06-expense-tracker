@@ -25,7 +25,6 @@ let removeCategoryFilterBtn = null;
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
   showCategoriesBtn = document.getElementById("show-categories")
-  const logoff = document.getElementById("logoff");
   const addExpense = document.getElementById("add-expense");
   expensesTable = document.getElementById("expenses-table");
   expensesTableHeader = document.getElementById("expenses-table-header");
@@ -41,14 +40,6 @@ export const handleExpenses = () => {
       } else if (e.target === addExpense) {
         message.textContent = "";
         showAddEdit(null);
-      } else if (e.target === logoff) {
-        setToken(null);
-
-        message.textContent = "You have been logged off.";
-
-        expensesTable.replaceChildren([jobsTableHeader]);
-
-        showLoginRegister();
       } else if (e.target.classList.contains("editButton")) {
         message.textContent = "";
         showAddEdit(e.target.dataset.id);
@@ -77,6 +68,12 @@ export const handleExpenses = () => {
         categoryFilterId = null
         categoryFilterTitle = null
         showExpenses()
+
+      } else if (e.target.classList.contains("logoff")) {
+        setToken(null);
+        message.textContent = "You have been logged off.";
+        expensesTable.replaceChildren([expensesTableHeader]);
+        showLoginRegister();
       }
     }
   });
