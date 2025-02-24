@@ -27,7 +27,7 @@ export const setToken = (value, name='') => {
 
   // Update UI
   const profileElement = document.getElementById('profile')
-  profileElement.style.display = (token ? '' : 'none')
+  profileElement.style.display = (token ? 'block' : 'none')
   const profileNameElement = profileElement.getElementsByTagName('span')[0]
   profileNameElement.textContent = userName;
 };
@@ -44,8 +44,7 @@ import { handleRegister } from "./register.js";
 document.addEventListener("DOMContentLoaded", () => {
   const profile = JSON.parse( localStorage.getItem("profile") )
 
-  if(profile)
-    setToken(profile.token, profile.name)
+  setToken(profile?.token, profile?.name)
 
   message = document.getElementById("message");
   handleLoginRegister();
@@ -59,4 +58,19 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     showLoginRegister();
   }
+
+  document.querySelector('header button.logoff').addEventListener("click", (e) => {
+    setToken(null);
+    message.textContent = "You have been logged off.";
+    emptyTables();
+    showLoginRegister();
+  })
 });
+
+export const emptyTables = () => {
+  const tables = Array.from( document.getElementsByTagName('table') )
+  tables.forEach(tableElement => {
+    const tableHeading = tableElement.getElementsByTagName('th')[0]
+    tableElement.replaceChildren([tableHeading])
+  });
+}

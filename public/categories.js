@@ -6,6 +6,7 @@ import {
   enableInput,
   inputEnabled,
   setToken,
+  emptyTables,
 } from "./index.js";
 import { showLoginRegister } from "./loginRegister.js";
 const CATEGORY_DEFAULT_SORT = 'title'
@@ -53,7 +54,7 @@ export const handleCategories = () => {
       } else if (e.target.classList.contains("logoff")) {
         setToken(null);
         message.textContent = "You have been logged off.";
-        categoriesTable.replaceChildren([categoriesTableHeader]);
+        emptyTables()
         showLoginRegister();
       }
     }

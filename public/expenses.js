@@ -5,6 +5,7 @@ import {
   setToken,
   token,
   enableInput,
+  emptyTables,
 } from "./index.js";
 import { showLoginRegister } from "./loginRegister.js";
 import { showAddEdit } from "./addEdit.js";
@@ -72,7 +73,7 @@ export const handleExpenses = () => {
       } else if (e.target.classList.contains("logoff")) {
         setToken(null);
         message.textContent = "You have been logged off.";
-        expensesTable.replaceChildren([expensesTableHeader]);
+        emptyTables()
         showLoginRegister();
       }
     }
