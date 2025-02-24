@@ -26,8 +26,10 @@ export const handleExpenses = () => {
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if(e.target === showCategoriesBtn) {
+        message.textContent = "";
         showCategories()
       } else if (e.target === addExpense) {
+        message.textContent = "";
         showAddEdit(null);
       } else if (e.target === logoff) {
         setToken(null);

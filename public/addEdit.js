@@ -1,5 +1,6 @@
 import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
 import { showExpenses } from "./expenses.js";
+import { getCategories, createCategorySelectElement, showAddCategoryPrompt } from "./categories.js";
 
 let addEditDiv = null;
 let title = null;
@@ -14,6 +15,7 @@ export const handleAddEdit = () => {
   amount = document.getElementById("amount");
   description = document.getElementById("description");
   category = document.getElementById("category");
+  const addCategoryToSelect = document.getElementById("add-category-to-select");
   addingExpense = document.getElementById("adding-expense");
   const editCancel = document.getElementById("edit-cancel");
 
@@ -67,6 +69,9 @@ export const handleAddEdit = () => {
         }
   
         enableInput(true);
+      } else if(e.target === addCategoryToSelect) {
+        e.preventDefault()
+        showAddCategoryPrompt(category)
       } else if (e.target === editCancel) {
         message.textContent = "";
         showExpenses();
@@ -128,33 +133,3 @@ export const showAddEdit = async (expenseId) => {
   }
 
 };
-
-// Get categories
-const getCategories = async () => {
-  const { categories } = await fetch(`/api/v1/categories`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then(data => data.json())
-
-  return categories
-}
-
-const createCategorySelectElement = (categories, selectedId='') => {
-  const defaultOption = {
-    title:'Select a category',
-    _id:''
-  }
-
-  //Empty previous added cats to select/options
-  category.innerHTML = '';
-
-  [defaultOption, ...categories].forEach(cat => {
-    const optionElement = document.createElement('option')
-    optionElement.text = cat.title
-    optionElement.value = cat._id
-    optionElement.selected = (cat._id == selectedId)
-    category.appendChild(optionElement)
-  });
-}

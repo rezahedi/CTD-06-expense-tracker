@@ -15,13 +15,26 @@ let showExpensesBtn = null;
 export const handleCategories = () => {
   categoriesDiv = document.getElementById("categories")
   showExpensesBtn = document.getElementById("show-expenses")
+  const addCategory = document.getElementById("add-category");
   categoriesTable = document.getElementById("categories-table");
   categoriesTableHeader = document.getElementById("categories-table-header");
 
   categoriesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if(e.target === showExpensesBtn) {
+        message.textContent = "";
         showExpenses()
+      } else if (e.target === addCategory) {
+        message.textContent = "";
+        showAddCategoryPrompt()
+      } else if (e.target.classList.contains("editButton")) {
+        message.textContent = "";
+        showEditCategoryPrompt(e.target.dataset.title, e.target.dataset.id);
+      } else if (e.target.classList.contains("deleteButton")) {
+        message.textContent = "";
+        e.target.disabled = true;
+        e.target.innerHTML = 'Deleting ...'
+        handleCategoryDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
       }
     }
   })
@@ -50,8 +63,8 @@ export const showCategories = async () => {
           const category = data.categories[i]
           let rowEntry = document.createElement("tr");
 
-          let editButton = `<button type="button" class="editButton" data-id=${category._id}>edit</button>`;
-          let deleteButton = `<button type="button" class="deleteButton" data-id=${category._id}>delete</button>`;
+          let editButton = `<button type="button" class="editButton" data-id="${category._id}" data-title="${category.title}">edit</button>`;
+          let deleteButton = `<button type="button" class="deleteButton" data-id="${category._id}">delete</button>`;
           let rowHTML = `
             <td>${category.title}</td>
             <td>0</td>
@@ -74,3 +87,103 @@ export const showCategories = async () => {
   enableInput(true);
   setDiv(categoriesDiv);
 };
+
+// Get categories
+export const getCategories = async () => {
+  const { categories } = await fetch(`/api/v1/categories`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then(data => data.json())
+
+  return categories
+}
+
+export const createCategorySelectElement = (categories, selectedId='') => {
+  const defaultOption = {
+    title:'Select a category',
+    _id:''
+  }
+
+  //Empty previous added cats to select/options
+  category.innerHTML = '';
+
+  [defaultOption, ...categories].forEach(cat => {
+    createOptionElement(cat.title, cat._id, (cat._id == selectedId), category)
+  });
+}
+
+export const showAddCategoryPrompt = async (selectElement=null) => {
+  const title = promptCategory()
+
+  if(!title) return;
+
+  let method = "POST";
+  let url = "/api/v1/categories";
+
+  try {
+    const { category } = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title }),
+    }).then(data => data.json())
+
+    if(selectElement)
+      createOptionElement(category.title, category._id, true, selectElement)
+    else
+      showCategories()
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communications error has occurred, Try again.";
+  }
+}
+
+export const showEditCategoryPrompt = async (categoryTitle, categoryId) => {
+  const newTitle = promptCategory(`Edit Category '${categoryTitle}':`, categoryTitle)
+
+  if(!newTitle) return;
+
+  let method = "PATCH";
+  let url = `/api/v1/categories/${categoryId}`;
+
+  try {
+    await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title: newTitle }),
+    }).then(data => data.json())
+
+    showCategories()
+  } catch (err) {
+    console.log(err);
+    message.textContent = "A communications error has occurred, Try again.";
+  }
+}
+
+export const promptCategory = (msg='New Category:', _default='') => {
+  const title = (prompt(msg, _default) || '').trim()
+
+  if(!title) return '';
+  // Match value with any chars length between 3 - 30 chars only
+  if(!title.match(/^.{3,30}$/)) {
+    message.textContent = "Category's name should be between 3 - 30 chars!"
+    return ''
+  }
+
+  return title;
+}
+
+export const createOptionElement = (text='', value='', selected=false, selectElement) => {
+  const optionElement = document.createElement('option')
+  optionElement.text = text
+  optionElement.value = value
+  optionElement.selected = selected
+  selectElement.appendChild(optionElement)
+}

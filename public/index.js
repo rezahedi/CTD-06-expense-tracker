@@ -27,11 +27,10 @@ export const setToken = (value) => {
 export let message = null;
 
 import { showExpenses, handleExpenses } from "./expenses.js";
-import { showCategories, handleCategories } from "./categories.js";
+import { handleCategories } from "./categories.js";
 import { showLoginRegister, handleLoginRegister } from "./loginRegister.js";
 import { handleLogin } from "./login.js";
 import { handleAddEdit } from "./addEdit.js";
-import { handleCategory } from "./addCategory.js";
 import { handleRegister } from "./register.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -43,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   handleCategories()
   handleRegister();
   handleAddEdit();
-  handleCategory();
   if (token) {
     showExpenses();
   } else {
