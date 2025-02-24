@@ -20,7 +20,8 @@ const getCategories = async (req, res) => {
     },
     {
       $addFields: {
-        expenses: { $size: '$expenses'} // Count number of expenses
+        expensesCount: { $size: '$expenses'}, // Count number of expenses
+        expensesSum: { $sum: '$expenses.amount' } // Sum of expenses' amounts
       }
     }
   ]).sort(sort)

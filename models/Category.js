@@ -12,6 +12,10 @@ const CategorySchema = new mongoose.Schema({
     minlength: [3, 'Title min length is 3'],
     maxlength: [30, 'Title max length is 30'],
   },
+  budget: {
+    type: Number,
+    default: 0,
+  },
 }, {
   timestamps: true
 })

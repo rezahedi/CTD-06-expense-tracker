@@ -86,13 +86,23 @@ export const showCategories = async () => {
       } else {
         for (let i = 0; i < data.categories.length; i++) {
           const category = data.categories[i]
+
+          // Budget
+          const budgetDifference = category.budget - category.expensesSum
+          // const budgetPercentage = (category.expensesSum / category.budget) * 100
+          const budgetLeft = budgetDifference > 0 ? `${budgetDifference.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} left` : '';
+          const budgetMatch = budgetDifference === 0 ? `Budget maxed` : '';
+          const overBudget = budgetDifference < 0 ? `${Math.abs(budgetDifference).toLocaleString('en-US', { style: 'currency', currency: 'USD' })} over` : '';
+
           let rowEntry = document.createElement("tr");
 
           let editButton = `<button type="button" class="editButton" data-id="${category._id}" data-title="${category.title}">edit</button>`;
           let deleteButton = `<button type="button" class="deleteButton" data-id="${category._id}">delete</button>`;
           let rowHTML = `
             <td>${category.title}</td>
-            <td>${category.expenses ? `<button class="filter-by-category" data-id=${category._id} data-title="${category.title}">${category.expenses}</button>` : '0'}</td>
+            <td>${category.expensesCount ? `<button class="filter-by-category" data-id=${category._id} data-title="${category.title}">${category.expensesCount}</button>` : '0'}</td>
+            <td>${category.expensesSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+            ${category.budget ? `<td style='color:${overBudget?'red':'green'}'>${category.budget.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} - ${budgetLeft}${budgetMatch}${overBudget}</td>` : '<td>--</td>'}
             <td>${new Date(category.createdAt).toDateString()}</td>
             <td>${new Date(category.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;

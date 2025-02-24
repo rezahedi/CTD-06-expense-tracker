@@ -158,7 +158,7 @@ export const showExpenses = async () => {
           let deleteButton = `<button type="button" class="deleteButton" data-id=${expense._id}>delete</button>`;
           let rowHTML = `
             <td>${expense.title}</td>
-            <td>$${expense.amount} USD</td>
+            <td>${expense.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
             <td><button class="filter-by-category" data-id=${expense.category?._id || ''}>${expense.category?.title || 'No Category'}</button></td>
             <td>${new Date(expense.createdAt).toDateString()}</td>
             <td>${new Date(expense.updatedAt).toDateString()}</td>
