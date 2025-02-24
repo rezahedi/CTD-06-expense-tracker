@@ -1,4 +1,4 @@
-import { showExpenses, toggleSort } from "./expenses.js";
+import { showExpenses, toggleSort, showExpensesByCategory } from "./expenses.js";
 import {
   setDiv,
   message,
@@ -43,6 +43,9 @@ export const handleCategories = () => {
         sort = sort.includes('title') ? toggleSort(sort) : 'title'
         sortTitle.textContent = sort==='title' ? 'Title ▼' : 'Title ▲'
         showCategories()
+
+      } else if (e.target.classList.contains("filter-by-category")) { // Show expenses linked to the clicked category
+        showExpensesByCategory(e.target.dataset.id, e.target.dataset.title)
       }
     }
   })
@@ -79,7 +82,7 @@ export const showCategories = async () => {
           let deleteButton = `<button type="button" class="deleteButton" data-id="${category._id}">delete</button>`;
           let rowHTML = `
             <td>${category.title}</td>
-            <td>${category.expenses}</td>
+            <td>${category.expenses ? `<button class="filter-by-category" data-id=${category._id} data-title="${category.title}">${category.expenses}</button>` : '0'}</td>
             <td>${new Date(category.createdAt).toDateString()}</td>
             <td>${new Date(category.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;

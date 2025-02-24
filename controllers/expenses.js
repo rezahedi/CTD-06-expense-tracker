@@ -4,9 +4,15 @@ const { BadRequestError, NotFoundError } = require('../errors')
 const DEFAULT_SORT = 'createdAt'
 
 const getAllExpenses = async (req, res) => {
-  const { sort=DEFAULT_SORT } = req.query
+  const { sort=DEFAULT_SORT, category='' } = req.query
 
-  const expenses = await Expense.find({ userId: req.user.userId }).populate('category', 'title').sort(sort)
+  const filters = {
+    userId: req.user.userId,
+  }
+  if(category)
+    filters.category = category
+
+  const expenses = await Expense.find(filters).populate('category', 'title').sort(sort)
   res.status( StatusCodes.OK ).json({ expenses, count: expenses.length })
 }
 

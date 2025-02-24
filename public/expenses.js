@@ -18,6 +18,9 @@ let showCategoriesBtn = null;
 let sortCreatedAt = null;
 let sortUpdatedAt = null;
 let sort = EXPENSE_DEFAULT_SORT;
+let categoryFilterId = null;
+let categoryFilterTitle = null;
+let removeCategoryFilterBtn = null;
 
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
@@ -28,6 +31,7 @@ export const handleExpenses = () => {
   expensesTableHeader = document.getElementById("expenses-table-header");
   sortCreatedAt = document.getElementById('sort-createdAt')
   sortUpdatedAt = document.getElementById('sort-updatedAt')
+  removeCategoryFilterBtn = document.getElementById('remove-category-filter')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -64,6 +68,15 @@ export const handleExpenses = () => {
         sortUpdatedAt.textContent = sort==='updatedAt' ? 'Modified At ▼' : 'Modified At ▲'
         sortCreatedAt.textContent = 'Created At'
         showExpenses()
+
+      } else if (e.target.classList.contains("filter-by-category")) { // Filter expenses by clicked category
+        categoryFilterId = e.target.dataset.id
+        categoryFilterTitle = e.target.textContent
+        showExpenses()
+      } else if (e.target === removeCategoryFilterBtn) {
+        categoryFilterId = null
+        categoryFilterTitle = null
+        showExpenses()
       }
     }
   });
@@ -96,12 +109,32 @@ const handleDelete = async (expenseId, onDeleteAction) => {
   enableInput(true);
 }
 
+export const showExpensesByCategory = async (categoryId, categoryTitle) => {
+  categoryFilterId = categoryId
+  categoryFilterTitle = categoryTitle
+  showExpenses()
+}
+
 export const showExpenses = async () => {
   try {
     enableInput(false);
 
-    // Sort
     const params = new URLSearchParams();
+
+    // Filters
+    const filterStatusDiv = document.getElementById('filter-status')
+    if(categoryFilterId) {
+      // Update API params
+      params.append('category', categoryFilterId)
+
+      // Update UI
+      filterStatusDiv.getElementsByTagName('span')[0].textContent = categoryFilterTitle
+      filterStatusDiv.style.display = 'block'
+    } else {
+      filterStatusDiv.style.display = 'none'
+    }
+
+    // Sort
     params.append('sort', sort)
 
     const response = await fetch(`/api/v1/expenses?${params}`, {
@@ -128,7 +161,7 @@ export const showExpenses = async () => {
           let rowHTML = `
             <td>${expense.title}</td>
             <td>$${expense.amount} USD</td>
-            <td>${expense.category?.title || 'No Category'}</td>
+            <td><button class="filter-by-category" data-id=${expense.category?._id || ''}>${expense.category?.title || 'No Category'}</button></td>
             <td>${new Date(expense.createdAt).toDateString()}</td>
             <td>${new Date(expense.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;
