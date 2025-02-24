@@ -48,7 +48,7 @@ export const handleRegister = () => {
             const data = await response.json();
             if (response.status === 201) {
               message.textContent = `Registration successful.  Welcome ${data.user.name}`;
-              setToken(data.token);
+              setToken(data.token, data.user.name);
 
               name.value = "";
               email1.value = "";

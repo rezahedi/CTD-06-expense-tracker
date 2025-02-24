@@ -1,7 +1,6 @@
 import {
   inputEnabled,
   setDiv,
-  token,
   message,
   enableInput,
   setToken,
@@ -40,7 +39,7 @@ export const handleLogin = () => {
           const data = await response.json();
           if (response.status === 200) {
             message.textContent = `login successful.  Welcome ${data.user.name}`;
-            setToken(data.token);
+            setToken(data.token, data.user.name);
 
             email.value = "";
             password.value = "";
