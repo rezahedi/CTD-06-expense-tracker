@@ -100,7 +100,7 @@ export const showCategories = async () => {
           let deleteButton = `<button type="button" class="deleteButton" data-id="${category._id}">delete</button>`;
           let rowHTML = `
             <td>${category.title}</td>
-            <td>${category.expensesCount ? `<button class="filter-by-category" data-id=${category._id} data-title="${category.title}">${category.expensesCount}</button>` : '0'}</td>
+            <td>${category.expensesCount ? `<button class="filter-by-category link" data-id=${category._id} data-title="${category.title}">${category.expensesCount}</button>` : '0'}</td>
             <td>${category.expensesSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
             ${category.budget ? `<td style='color:${overBudget?'red':'green'}'>${category.budget.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} - ${budgetLeft}${budgetMatch}${overBudget}</td>` : '<td>--</td>'}
             <td>${new Date(category.createdAt).toDateString()}</td>

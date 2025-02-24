@@ -21,6 +21,17 @@ th, td{
   padding:.5rem 1rem;
   text-wrap:nowrap;
 }
+button.link{
+  border:none;
+  background: none;
+  color:blue;
+  text-decoration: underline;
+  cursor: pointer;
+  padding:0;
+}
+button.link:hover{
+  text-decoration: none;
+}
 </style>
   </head>
 
@@ -83,8 +94,8 @@ th, td{
           <th>Title</th>
           <th>Amount</th>
           <th>Category</th>
-          <th><button id="sort-createdAt">Created At ▼</button></th>
-          <th><button id="sort-updatedAt">Modified At</button></th>
+          <th><button id="sort-createdAt" class="link">Created At ▼</button></th>
+          <th><button id="sort-updatedAt" class="link">Modified At</button></th>
           <th colspan="2">Actions</th>
         </tr>
       </table>
@@ -120,7 +131,7 @@ th, td{
       <button id="show-expenses">Show Expense</button>
       <table id="categories-table">
         <tr id="categories-table-header">
-          <th><button id="sort-title">Title ▼</button></th>
+          <th><button id="sort-title" class="link">Title ▼</button></th>
           <th>Expenses Count</th>
           <th>Expenses Sum</th>
           <th>Budget</th>
