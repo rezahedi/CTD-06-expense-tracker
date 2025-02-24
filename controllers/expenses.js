@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
 const getAllExpenses = async (req, res) => {
-  const expenses = await Expense.find({ userId: req.user.userId }).populate('userId', 'name').populate('category', 'title').sort('createdAt')
+  const expenses = await Expense.find({ userId: req.user.userId }).populate('category', 'title').sort('createdAt')
   res.status( StatusCodes.OK ).json({ expenses, count: expenses.length })
 }
 
@@ -16,7 +16,7 @@ const getExpense = async (req, res) => {
   const expense = await Expense.findOne({
     userId,
     _id: expenseId
-  }).populate('userId', 'name').populate('category', 'title')
+  }).populate('category', 'title')
 
   if ( !expense ) {
     throw new NotFoundError(`No expense with id ${expenseId}`)

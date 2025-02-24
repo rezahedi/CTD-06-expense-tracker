@@ -67,7 +67,7 @@ export const showCategories = async () => {
           let deleteButton = `<button type="button" class="deleteButton" data-id="${category._id}">delete</button>`;
           let rowHTML = `
             <td>${category.title}</td>
-            <td>0</td>
+            <td>${category.expenses}</td>
             <td>${new Date(category.createdAt).toDateString()}</td>
             <td>${new Date(category.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;
