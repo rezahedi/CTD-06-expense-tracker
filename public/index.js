@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector('header button.logoff').addEventListener("click", (e) => {
     setToken(null);
-    message.textContent = "You have been logged off.";
+    setMessage("You have been logged off.")
     emptyTables();
     showLoginRegister();
   })
@@ -75,4 +75,13 @@ export const emptyTables = () => {
     const tableHeading = tableElement.getElementsByTagName('th')[0]
     tableElement.replaceChildren([tableHeading])
   });
+}
+
+export const setMessage = (msg, error=false) => {
+  message.textContent = msg
+  message.style.backgroundColor =  (error ? '#ffa2a2' : '#a2ffb2')
+  message.style.display = 'block'
+  setTimeout(()=>{
+    message.style.display = 'none'
+  }, 3000);
 }

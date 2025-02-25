@@ -1,7 +1,7 @@
 import {
   inputEnabled,
   setDiv,
-  message,
+  setMessage,
   setToken,
   token,
   enableInput,
@@ -43,16 +43,12 @@ export const handleExpenses = () => {
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if(e.target === showCategoriesBtn) {
-        message.textContent = "";
         showCategories()
       } else if (e.target === addExpense) {
-        message.textContent = "";
         showAddEdit(null);
       } else if (e.target.classList.contains("editButton")) {
-        message.textContent = "";
         showAddEdit(e.target.dataset.id);
       } else if (e.target.classList.contains("deleteButton")) {
-        message.textContent = "";
         e.target.disabled = true;
         e.target.innerHTML = 'Deleting ...'
         handleDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
@@ -99,7 +95,7 @@ export const handleExpenses = () => {
       // Logout
       } else if (e.target.classList.contains("logoff")) {
         setToken(null);
-        message.textContent = "You have been logged off.";
+        setMessage("You have been logged off.")
         emptyTables()
         showLoginRegister();
 
@@ -137,7 +133,7 @@ const handleDelete = async (expenseId, onDeleteAction) => {
     });
 
     if (response.status === 200) {
-      message.textContent = "The expense entry was removed.";
+      setMessage("The expense entry was removed.")
       onDeleteAction();
     } else {
       const data = await response.json();
@@ -145,7 +141,7 @@ const handleDelete = async (expenseId, onDeleteAction) => {
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communication error occurred.";
+    setMessage("A communication error occurred.", true)
   }
 
   enableInput(true);
@@ -232,11 +228,11 @@ export const showExpenses = async () => {
       nextBtn.disabled = data.expenses.length < size;
       document.getElementById('pageNum').textContent = `Page ${page}`
     } else {
-      message.textContent = data.msg;
+      setMessage(data.msg, true)
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communication error occurred.";
+    setMessage("A communication error occurred.", true)
   }
   enableInput(true);
   setDiv(expensesDiv);

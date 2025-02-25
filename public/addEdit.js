@@ -1,4 +1,4 @@
-import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
+import { enableInput, inputEnabled, setMessage, setDiv, token } from "./index.js";
 import { showExpenses } from "./expenses.js";
 import { getCategories, createCategorySelectElement, showAddCategoryPrompt } from "./categories.js";
 
@@ -55,7 +55,7 @@ export const handleAddEdit = () => {
           const data = await response.json();
           if (response.status === 200 || response.status === 201) {
             // success codes: 201 = create / 200 = update
-            message.textContent = (response.status === 200 ? "The expense entry was updated." : "The expense entry was created.");
+            setMessage(response.status === 200 ? "The expense entry was updated." : "The expense entry was created.");
   
             title.value = "";
             amount.value = "";
@@ -65,11 +65,11 @@ export const handleAddEdit = () => {
   
             showExpenses();
           } else {
-            message.textContent = data.msg;
+            setMessage(data.msg, true);
           }
         } catch (err) {
           console.log(err);
-          message.textContent = "A communication error occurred.";
+          setMessage("A communication error occurred.", true);
         }
   
         enableInput(true);
@@ -77,7 +77,6 @@ export const handleAddEdit = () => {
         e.preventDefault()
         showAddCategoryPrompt(category)
       } else if (e.target === editCancel) {
-        message.textContent = "";
         showExpenses();
       }
     }
@@ -94,7 +93,6 @@ export const showAddEdit = async (expenseId) => {
       card.value = "";
       description.value = "";
       addingExpense.textContent = "add";
-      message.textContent = "";
   
       createCategorySelectElement(categories)
 
@@ -118,7 +116,6 @@ export const showAddEdit = async (expenseId) => {
         description.value = data.expense.description;
         // category.value = data.expense.category;
         addingExpense.textContent = "update";
-        message.textContent = "";
         addEditDiv.dataset.id = expenseId;
 
         createCategorySelectElement(categories, data.expense.category?._id || '')
@@ -126,7 +123,7 @@ export const showAddEdit = async (expenseId) => {
         setDiv(addEditDiv);
       } else {
         // might happen if the list has been updated since last display
-        message.textContent = "The Expense entry was not found";
+        setMessage("The Expense entry was not found", true);
         showExpenses();
       }
 
@@ -134,7 +131,7 @@ export const showAddEdit = async (expenseId) => {
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communications error has occurred.";
+    setMessage("A communications error has occurred.", true);
     showExpenses();
   }
 

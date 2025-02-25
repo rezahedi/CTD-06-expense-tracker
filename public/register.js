@@ -1,8 +1,7 @@
 import {
   inputEnabled,
   setDiv,
-  message,
-  token,
+  setMessage,
   enableInput,
   setToken,
 } from "./index.js";
@@ -28,7 +27,7 @@ export const handleRegister = () => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if (e.target === registerButton) {
         if (password1.value != password2.value) {
-          message.textContent = "The passwords entered do not match.";
+          setMessage("The passwords entered do not match.", true)
         } else {
           enableInput(false);
 
@@ -47,7 +46,7 @@ export const handleRegister = () => {
 
             const data = await response.json();
             if (response.status === 201) {
-              message.textContent = `Registration successful.  Welcome ${data.user.name}`;
+              setMessage(`Registration successful. Welcome ${data.user.name}`)
               setToken(data.token, data.user.name);
 
               name.value = "";
@@ -57,11 +56,11 @@ export const handleRegister = () => {
 
               showExpenses();
             } else {
-              message.textContent = data.msg;
+              setMessage(data.msg, true)
             }
           } catch (err) {
             console.error(err);
-            message.textContent = "A communications error occurred.";
+            setMessage("A communications error occurred.", true)
           }
 
           enableInput(true);

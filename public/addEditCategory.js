@@ -1,4 +1,4 @@
-import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
+import { enableInput, inputEnabled, setMessage, setDiv, token } from "./index.js";
 import { showCategories } from './categories.js'
 
 let addEditDivCategory = null;
@@ -44,23 +44,22 @@ export const handleAddEditCategory = () => {
           const data = await response.json();
           if (response.status === 200 || response.status === 201) {
             // success codes: 201 = create / 200 = update
-            message.textContent = (response.status === 200 ? "The category entry was updated." : "The category entry was created.");
+            setMessage(response.status === 200 ? "The category entry was updated." : "The category entry was created.");
   
             catTitle.value = "";
             catBudget.value = "";
   
             showCategories();
           } else {
-            message.textContent = data.msg;
+            setMessage(data.msg, true);
           }
         } catch (err) {
           console.log(err);
-          message.textContent = "A communication error occurred.";
+          setMessage("A communication error occurred.", true);
         }
   
         enableInput(true);
       } else if (e.target === editCancel) {
-        message.textContent = "";
         showCategories();
       }
     }
@@ -73,7 +72,6 @@ export const showAddEditCategory = async (categoryId) => {
       catTitle.value = "";
       catBudget.value = "";
       addingCategory.textContent = "add";
-      message.textContent = "";
   
       setDiv(addEditDivCategory);
     } else {
@@ -93,13 +91,12 @@ export const showAddEditCategory = async (categoryId) => {
         catTitle.value = data.category.title;
         catBudget.value = data.category.budget;
         addingCategory.textContent = "update";
-        message.textContent = "";
         addEditDivCategory.dataset.id = categoryId;
 
         setDiv(addEditDivCategory);
       } else {
         // might happen if the list has been updated since last display
-        message.textContent = "The Category entry was not found";
+        setMessage("The Category entry was not found", true);
         showCategories();
       }
 
@@ -107,7 +104,7 @@ export const showAddEditCategory = async (categoryId) => {
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communications error has occurred.";
+    setMessage("A communications error has occurred.", true);
     showCategories();
   }
 }

@@ -1,9 +1,9 @@
 import {
   inputEnabled,
   setDiv,
-  message,
   enableInput,
   setToken,
+  setMessage,
 } from "./index.js";
 import { showLoginRegister } from "./loginRegister.js";
 import { showExpenses } from "./expenses.js";
@@ -38,7 +38,7 @@ export const handleLogin = () => {
 
           const data = await response.json();
           if (response.status === 200) {
-            message.textContent = `login successful.  Welcome ${data.user.name}`;
+            setMessage(`login successful. Welcome ${data.user.name}`)
             setToken(data.token, data.user.name);
 
             email.value = "";
@@ -46,11 +46,11 @@ export const handleLogin = () => {
 
             showExpenses();
           } else {
-            message.textContent = data.msg;
+            setMessage(data.msg, true);
           }
         } catch (err) {
           console.error(err);
-          message.textContent = "A communications error occurred.";
+          setMessage("A communications error occurred.", true);
         }
 
         enableInput(true);

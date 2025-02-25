@@ -2,7 +2,7 @@ import { showAddEditCategory } from "./addEditCategory.js";
 import { showExpenses, toggleSort, showExpensesByCategory } from "./expenses.js";
 import {
   setDiv,
-  message,
+  setMessage,
   token,
   enableInput,
   inputEnabled,
@@ -28,18 +28,14 @@ export const handleCategories = () => {
   categoriesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
       if(e.target === showExpensesBtn) {
-        message.textContent = "";
         showExpenses()
       } else if (e.target === addCategory) {
-        message.textContent = "";
         showAddEditCategory()
         // showAddCategoryPrompt()
       } else if (e.target.classList.contains("editButton")) {
-        message.textContent = "";
         showAddEditCategory(e.target.dataset.id)
         // showEditCategoryPrompt(e.target.dataset.title, e.target.dataset.id);
       } else if (e.target.classList.contains("deleteButton")) {
-        message.textContent = "";
         e.target.disabled = true;
         e.target.innerHTML = 'Deleting ...'
         handleCategoryDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
@@ -66,7 +62,7 @@ export const handleCategories = () => {
       
       } else if (e.target.classList.contains("logoff")) {
         setToken(null);
-        message.textContent = "You have been logged off.";
+        setMessage("You have been logged off.");
         emptyTables()
         showLoginRegister();
       }
@@ -126,11 +122,11 @@ export const showCategories = async () => {
         categoriesTable.replaceChildren(...children);
       }
     } else {
-      message.textContent = data.msg;
+      setMessage(data.msg, true);
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communication error occurred.";
+    setMessage("A communication error occurred.", true);
   }
   enableInput(true);
   setDiv(categoriesDiv);
@@ -186,7 +182,7 @@ export const showAddCategoryPrompt = async (selectElement=null) => {
       showCategories()
   } catch (err) {
     console.log(err);
-    message.textContent = "A communications error has occurred, Try again.";
+    setMessage("A communications error has occurred, Try again.", true);
   }
 }
 
@@ -211,7 +207,7 @@ export const showEditCategoryPrompt = async (categoryTitle, categoryId) => {
     showCategories()
   } catch (err) {
     console.log(err);
-    message.textContent = "A communications error has occurred, Try again.";
+    setMessage("A communications error has occurred, Try again.", true);
   }
 }
 
@@ -221,7 +217,7 @@ export const promptCategory = (msg='New Category:', _default='') => {
   if(!title) return '';
   // Match value with any chars length between 3 - 30 chars only
   if(!title.match(/^.{3,30}$/)) {
-    message.textContent = "Category's name should be between 3 - 30 chars!"
+    setMessage("Category's name should be between 3 - 30 chars!", true)
     return ''
   }
 
@@ -249,7 +245,7 @@ export const handleCategoryDelete = async (categoryId, onDeleteAction) => {
     });
 
     if (response.status === 200) {
-      message.textContent = "The category entry was removed.";
+      setMessage("The category entry was removed.");
       onDeleteAction();
     } else {
       const data = await response.json();
@@ -257,7 +253,7 @@ export const handleCategoryDelete = async (categoryId, onDeleteAction) => {
     }
   } catch (err) {
     console.log(err);
-    message.textContent = "A communication error occurred.";
+    setMessage("A communication error occurred.", true);
   }
 
   enableInput(true);
