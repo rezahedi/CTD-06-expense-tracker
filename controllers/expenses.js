@@ -5,18 +5,21 @@ const DEFAULT_SORT = 'createdAt'
 const PAGE_SIZE = 20;
 
 const getAllExpenses = async (req, res) => {
-  const { sort=DEFAULT_SORT, category='', page=1, size=PAGE_SIZE } = req.query
+  const { sort=DEFAULT_SORT, category='', search='', page=1, size=PAGE_SIZE } = req.query
   const limit = size;
   const skip = page*limit-limit;
+  const searchTerm = search.trim()
 
   const filters = {
     userId: req.user.userId,
   }
   if(category)
     filters.category = category
+  if(searchTerm)
+    filters.title = { $regex: searchTerm, $options: 'i' }
 
   const expenses = await Expense.find(filters).populate('category', 'title').sort(sort).skip(skip).limit(limit)
-  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length, ...{category, sort, skip, limit} })
+  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length, ...{category, searchTerm, sort, skip, limit} })
 }
 
 const getExpense = async (req, res) => {
