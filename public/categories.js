@@ -1,3 +1,4 @@
+import { showAddEditCategory } from "./addEditCategory.js";
 import { showExpenses, toggleSort, showExpensesByCategory } from "./expenses.js";
 import {
   setDiv,
@@ -33,10 +34,12 @@ export const handleCategories = () => {
         showExpenses()
       } else if (e.target === addCategory) {
         message.textContent = "";
-        showAddCategoryPrompt()
+        showAddEditCategory()
+        // showAddCategoryPrompt()
       } else if (e.target.classList.contains("editButton")) {
         message.textContent = "";
-        showEditCategoryPrompt(e.target.dataset.title, e.target.dataset.id);
+        showAddEditCategory(e.target.dataset.id)
+        // showEditCategoryPrompt(e.target.dataset.title, e.target.dataset.id);
       } else if (e.target.classList.contains("deleteButton")) {
         message.textContent = "";
         e.target.disabled = true;

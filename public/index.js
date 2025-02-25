@@ -36,6 +36,7 @@ export let message = null;
 
 import { showExpenses, handleExpenses } from "./expenses.js";
 import { handleCategories } from "./categories.js";
+import { handleAddEditCategory } from "./addEditCategory.js"
 import { showLoginRegister, handleLoginRegister } from "./loginRegister.js";
 import { handleLogin } from "./login.js";
 import { handleAddEdit } from "./addEdit.js";
@@ -51,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleLogin();
   handleExpenses();
   handleCategories()
+  handleAddEditCategory()
   handleRegister();
   handleAddEdit();
   if (token) {

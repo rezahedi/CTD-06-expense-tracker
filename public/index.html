@@ -172,6 +172,20 @@ button.link:hover{
       <button type="button" id="add-category">add category</button>
       <button type="button" class="logoff">log off</button>
     </div>
+    <div id="edit-category" style="display:none;">
+      <form>
+        <div>
+          <label for="catTitle">Title:</label>
+          <input type="text" id="catTitle" />
+        </div>
+        <div>
+          <label for="catBudget">Budget:</label>
+          <input type="text" id="catBudget" />
+        </div>
+        <button type="button" id="adding-category">add</button>
+        <button type="button" id="cat-edit-cancel">cancel</button>
+      </form>
+    </div>
     <script src="./index.js" type="module"></script>
   </body>
 </html>
