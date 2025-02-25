@@ -190,6 +190,7 @@ export const showExpenses = async () => {
           let rowHTML = `
             <td>${expense.title}</td>
             <td>${expense.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+            <td>${expense.card || ''}</td>
             <td><button class="filter-by-category link" data-id=${expense.category?._id || ''}>${expense.category?.title || 'No Category'}</button></td>
             <td>${new Date(expense.createdAt).toDateString()}</td>
             <td>${new Date(expense.updatedAt).toDateString()}</td>

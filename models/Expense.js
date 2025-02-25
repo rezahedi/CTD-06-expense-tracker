@@ -20,6 +20,11 @@ const ExpenseSchema = new mongoose.Schema({
     type: String,
     maxlength: 255
   },
+  card: {
+    type: String,
+    minlength: [3, 'Title min length is 3'],
+    maxlength: [20, 'Title max length is 20'],
+  },
   category: {
     type: mongoose.Types.ObjectId,
     ref: 'Category',

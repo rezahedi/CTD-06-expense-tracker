@@ -5,6 +5,7 @@ import { getCategories, createCategorySelectElement, showAddCategoryPrompt } fro
 let addEditDiv = null;
 let title = null;
 let amount = null;
+let card = null;
 let description = null;
 let category = null;
 let addingExpense = null;
@@ -13,6 +14,7 @@ export const handleAddEdit = () => {
   addEditDiv = document.getElementById("edit-expense");
   title = document.getElementById("title");
   amount = document.getElementById("amount");
+  card = document.getElementById("card");
   description = document.getElementById("description");
   category = document.getElementById("category");
   const addCategoryToSelect = document.getElementById("add-category-to-select");
@@ -36,6 +38,7 @@ export const handleAddEdit = () => {
           const bodyObject = {
             title: title.value,
             amount: amount.value,
+            card: card.value,
             description: description.value,
           }
           if(category.value) bodyObject.category = category.value
@@ -56,6 +59,7 @@ export const handleAddEdit = () => {
   
             title.value = "";
             amount.value = "";
+            card.value = "";
             description.value = "";
             category.value = "";
   
@@ -87,6 +91,7 @@ export const showAddEdit = async (expenseId) => {
     if (!expenseId) {
       title.value = "";
       amount.value = "";
+      card.value = "";
       description.value = "";
       addingExpense.textContent = "add";
       message.textContent = "";
@@ -109,6 +114,7 @@ export const showAddEdit = async (expenseId) => {
       if (response.status === 200) {
         title.value = data.expense.title;
         amount.value = data.expense.amount;
+        card.value = data.expense.card || '';
         description.value = data.expense.description;
         // category.value = data.expense.category;
         addingExpense.textContent = "update";
