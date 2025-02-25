@@ -18,6 +18,7 @@ let expensesDiv = null;
 let expensesTable = null;
 let expensesTableHeader = null;
 let showCategoriesBtn = null;
+let sortAmount = null;
 let sortCreatedAt = null;
 let sortUpdatedAt = null;
 let sort = EXPENSE_DEFAULT_SORT;
@@ -33,6 +34,7 @@ export const handleExpenses = () => {
   const addExpense = document.getElementById("add-expense");
   expensesTable = document.getElementById("expenses-table");
   expensesTableHeader = document.getElementById("expenses-table-header");
+  sortAmount = document.getElementById('sort-amount')
   sortCreatedAt = document.getElementById('sort-createdAt')
   sortUpdatedAt = document.getElementById('sort-updatedAt')
   removeCategoryFilterBtn = document.getElementById('remove-category-filter')
@@ -57,18 +59,28 @@ export const handleExpenses = () => {
         e.target.innerHTML = 'Deleting ...'
         handleDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
 
+      // Sort
+      } else if (e.target === sortAmount) {
+        sort = sort.includes('amount') ? toggleSort(sort) : 'amount'
+        sortAmount.textContent = sort==='amount' ? 'Amount ▼' : 'Amount ▲'
+        sortCreatedAt.textContent = 'Created At'
+        sortUpdatedAt.textContent = 'Modified At'
+        showExpenses()
       } else if (e.target === sortCreatedAt) {
         sort = sort.includes('createdAt') ? toggleSort(sort) : 'createdAt'
         sortCreatedAt.textContent = sort==='createdAt' ? 'Created At ▼' : 'Created At ▲'
+        sortAmount.textContent = 'Amount'
         sortUpdatedAt.textContent = 'Modified At'
         showExpenses()
       } else if (e.target === sortUpdatedAt) {
         sort = sort.includes('updatedAt') ? toggleSort(sort) : 'updatedAt'
         sortUpdatedAt.textContent = sort==='updatedAt' ? 'Modified At ▼' : 'Modified At ▲'
+        sortAmount.textContent = 'Amount'
         sortCreatedAt.textContent = 'Created At'
         showExpenses()
 
-      } else if (e.target.classList.contains("filter-by-category")) { // Filter expenses by clicked category
+      // Filter expenses by clicked category
+      } else if (e.target.classList.contains("filter-by-category")) {
         categoryFilterId = e.target.dataset.id
         categoryFilterTitle = e.target.textContent
         showExpenses()
@@ -77,6 +89,7 @@ export const handleExpenses = () => {
         categoryFilterTitle = null
         showExpenses()
 
+      // Logout
       } else if (e.target.classList.contains("logoff")) {
         setToken(null);
         message.textContent = "You have been logged off.";
