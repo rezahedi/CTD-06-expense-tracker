@@ -38,7 +38,6 @@ export const handleExpenses = () => {
   removeCategoryFilterBtn = document.getElementById('remove-category-filter')
   const prevBtn = document.getElementById('prevBtn')
   const nextBtn = document.getElementById('nextBtn')
-  const pageNum = document.getElementById('pageNum')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -195,7 +194,7 @@ export const showExpenses = async () => {
         }
         expensesTable.replaceChildren(...children);
       }
-      pageNum.textContent = `Page ${page}`
+      document.getElementById('pageNum').textContent = `Page ${page}`
     } else {
       message.textContent = data.msg;
     }
