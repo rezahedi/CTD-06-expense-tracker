@@ -38,6 +38,7 @@ export const handleExpenses = () => {
   removeCategoryFilterBtn = document.getElementById('remove-category-filter')
   const prevBtn = document.getElementById('prevBtn')
   const nextBtn = document.getElementById('nextBtn')
+  const pageLimitSelector = document.getElementById('pageLimitSelector')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -96,6 +97,11 @@ export const handleExpenses = () => {
       }
     }
   });
+
+  pageLimitSelector.addEventListener("change", (e) => {
+    size = parseInt(e.target.value);
+    showExpenses()
+  })
 };
 
 const handleDelete = async (expenseId, onDeleteAction) => {
@@ -194,6 +200,7 @@ export const showExpenses = async () => {
         }
         expensesTable.replaceChildren(...children);
       }
+      nextBtn.disabled = data.expenses.length < size;
       document.getElementById('pageNum').textContent = `Page ${page}`
     } else {
       message.textContent = data.msg;

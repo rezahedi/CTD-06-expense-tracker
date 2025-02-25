@@ -37,6 +37,12 @@ button.link:hover{
   gap: 2rem;
   justify-content: center;
 }
+.toolBar{
+  display: flex;justify-content: space-between;
+}
+.rowSelector{
+  flex-grow: 1; text-align: right;
+}
 </style>
   </head>
 
@@ -93,7 +99,20 @@ button.link:hover{
     </div>
     <div id="expenses" style="display:none;">
       <button id="show-categories">Show Categories</button>
-      <div id="filter-status" style="display: none;">Filtered by '<span></span>' <button id='remove-category-filter'>Remove</button></div>
+      <div class="toolBar">
+        <div id="filter-status" style="display: none;">Filtered by '<span></span>' <button id='remove-category-filter'>Remove</button></div>
+        <div class="rowSelector">
+          <label>
+            Rows per page:
+            <select id="pageLimitSelector">
+              <option value="2">2 rows</option>
+              <option value="5">5 rows</option>
+              <option value="10" selected>10 rows</option>
+              <option value="20">20 rows</option>
+            </select>
+          </label>
+        </div>
+      </div>
       <table id="expenses-table">
         <tr id="expenses-table-header">
           <th>Title</th>
