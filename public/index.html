@@ -32,6 +32,21 @@ button.link{
 button.link:hover{
   text-decoration: none;
 }
+header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#message{
+  font-size: larger;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: burlywood;
+  padding:5px 10px;
+  border-radius:5px;
+  box-shadow: 5px 5px 10px #0000006b;
+}
 #pagination{
   display: flex;
   gap: 2rem;
@@ -63,9 +78,7 @@ button.link:hover{
         <button type="button" class="logoff">log off</button>
       </div>
     </header>
-    <hr />
     <p id="message"></p>
-    <hr />
     <div id="login-register" style="display:none;">
       <button type="button" id="login">login</button>
       <button type="button" id="register">register</button>
