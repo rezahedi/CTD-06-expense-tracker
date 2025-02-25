@@ -23,6 +23,25 @@ const getCategories = async (req, res) => {
         expensesCount: { $size: '$expenses'}, // Count number of expenses
         expensesSum: { $sum: '$expenses.amount' } // Sum of expenses' amounts
       }
+    },
+    {
+      $lookup: {
+        from: "users", // Reference to the users collection
+        localField: "userId",
+        foreignField: "_id",
+        as: "user" // Store user data in an array
+      }
+    },
+    {
+      $addFields: {
+        userId: { _id: {$arrayElemAt: ["$user._id", 0]}, name: {$arrayElemAt: ["$user.name", 0]} } // Extract the first user's data
+      }
+    },
+    {
+      $project: {
+        expenses: 0,
+        user: 0,
+      }
     }
   ]).sort(sort)
 

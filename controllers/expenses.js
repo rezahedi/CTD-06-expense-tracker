@@ -18,7 +18,7 @@ const getAllExpenses = async (req, res) => {
   if(searchTerm)
     filters.title = { $regex: searchTerm, $options: 'i' }
 
-  const expenses = await Expense.find(filters).populate('category', 'title').sort(sort).skip(skip).limit(limit)
+  const expenses = await Expense.find(filters).populate('category', 'title').populate('userId', 'name').sort(sort).skip(skip).limit(limit)
   res.status( StatusCodes.OK ).json({ expenses, count: expenses.length, ...{category, searchTerm, sort, skip, limit} })
 }
 
