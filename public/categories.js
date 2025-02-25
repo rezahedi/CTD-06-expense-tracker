@@ -112,6 +112,7 @@ export const showCategories = async () => {
             <td>${category.expensesCount ? `<button class="filter-by-category link" data-id=${category._id} data-title="${category.title}">${category.expensesCount}</button>` : '0'}</td>
             <td>${category.expensesSum.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
             ${category.budget ? `<td style='color:${overBudget?'red':'green'}'>${category.budget.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} - ${budgetLeft}${budgetMatch}${overBudget}</td>` : '<td>--</td>'}
+            <td>${category.userId.name || ''}</td>
             <td>${new Date(category.createdAt).toDateString()}</td>
             <td>${new Date(category.updatedAt).toDateString()}</td>
             <td>${editButton} ${deleteButton}</td>`;
