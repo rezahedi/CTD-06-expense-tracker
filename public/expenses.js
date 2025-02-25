@@ -24,6 +24,7 @@ let categoryFilterTitle = null;
 let removeCategoryFilterBtn = null;
 let page = 1;
 let size = PAGE_SIZE;
+let search = '';
 
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
@@ -35,6 +36,9 @@ export const handleExpenses = () => {
   const prevBtn = document.getElementById('prevBtn')
   const nextBtn = document.getElementById('nextBtn')
   const pageLimitSelector = document.getElementById('pageLimitSelector')
+  const searchInput = document.getElementById('searchInput')
+  const searchBtn = document.getElementById('searchBtn')
+  const clearSearch = document.getElementById('clearSearch')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -68,6 +72,18 @@ export const handleExpenses = () => {
           sort = fieldName
           e.target.textContent = e.target.textContent + ' ▼'
         }
+        showExpenses()
+      
+      // Search filter by `title`
+      } else if (e.target === searchBtn) {
+        search = searchInput.value.trim()
+        if(!search) return;
+        clearSearch.style.display = 'block'
+        showExpenses()
+      } else if (e.target === clearSearch) { // Clear Search
+        search = '';
+        searchInput.value = '';
+        clearSearch.style.display = 'none'
         showExpenses()
 
       // Filter expenses by clicked category
@@ -147,7 +163,15 @@ export const showExpenses = async () => {
 
     const params = new URLSearchParams();
 
-    // Filters
+    // Filters search in title
+    if(search) {
+      params.append('search', search)
+      // Update UI
+      // document.getElementById('searchInput').value = search
+      // document.getElementById('clearSearch').style.display = 'block'
+    }
+
+    // Filters by category
     const filterStatusDiv = document.getElementById('filter-status')
     if(categoryFilterId) {
       // Update API params
@@ -155,9 +179,9 @@ export const showExpenses = async () => {
 
       // Update UI
       filterStatusDiv.getElementsByTagName('span')[0].textContent = categoryFilterTitle
-      filterStatusDiv.style.display = 'block'
+      filterStatusDiv.style.visibility = 'visible'
     } else {
-      filterStatusDiv.style.display = 'none'
+      filterStatusDiv.style.visibility = 'hidden'
     }
 
     // Sort
