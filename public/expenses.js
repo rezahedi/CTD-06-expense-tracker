@@ -203,7 +203,9 @@ export const showExpenses = async () => {
         if(page>1) page--;
         nextBtn.disabled = true;
         prevBtn.disabled = page===1
-        // expensesTable.replaceChildren(...children); // clear this for safety
+
+        if(page===1)
+          expensesTable.replaceChildren(...children); // clear this for safety
       } else {
         for (let i = 0; i < data.expenses.length; i++) {
           const expense = data.expenses[i]
