@@ -200,7 +200,7 @@ export const showExpenses = async () => {
 
     if (response.status === 200) {
       if (data.count === 0) {
-        page--;
+        if(page>1) page--;
         nextBtn.disabled = true;
         prevBtn.disabled = page===1
         // expensesTable.replaceChildren(...children); // clear this for safety
