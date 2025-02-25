@@ -1,5 +1,6 @@
 const {
   getCategories,
+  getCategory,
   createCategory,
   updateCategory,
   deleteCategory
@@ -8,6 +9,6 @@ const express = require('express')
 const router = express.Router()
 
 router.route('/').get(getCategories).post(createCategory)
-router.route('/:id').patch(updateCategory).delete(deleteCategory)
+router.route('/:id').get(getCategory).patch(updateCategory).delete(deleteCategory)
 
 module.exports = router

@@ -29,6 +29,24 @@ const getCategories = async (req, res) => {
   res.status( StatusCodes.OK ).json({ categories, count: categories.length })
 }
 
+const getCategory = async (req, res) => {
+  // const {user: {userId}, params:{id: expenseId}} = req
+  // Below lines are more readable than above commented line
+  const userId = req.user.userId
+  const categoryId = req.params.id
+
+  const category = await Category.findOne({
+    userId,
+    _id: categoryId
+  })
+
+  if ( !category ) {
+    throw new NotFoundError(`No category with id ${categoryId}`)
+  }
+
+  res.status( StatusCodes.OK ).json({ category })
+}
+
 const createCategory = async (req, res) => {
   const userId = req.user.userId
 
@@ -87,6 +105,7 @@ const deleteCategory = async (req, res) => {
 
 module.exports = {
   getCategories,
+  getCategory,
   createCategory,
   updateCategory,
   deleteCategory,
