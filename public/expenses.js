@@ -204,8 +204,11 @@ export const showExpenses = async () => {
         nextBtn.disabled = true;
         prevBtn.disabled = page===1
 
-        if(page===1)
-          expensesTable.replaceChildren(...children); // clear this for safety
+        if(page===1) {
+          let rowEntry = document.createElement("tr");
+          rowEntry.innerHTML = `<td colspan=8 class="emptyList">No Expenses!</td>`
+          expensesTable.replaceChildren(...children, rowEntry); // clear this for safety
+        }
       } else {
         for (let i = 0; i < data.expenses.length; i++) {
           const expense = data.expenses[i]

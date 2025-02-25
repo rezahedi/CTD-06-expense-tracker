@@ -91,7 +91,9 @@ export const showCategories = async () => {
 
     if (response.status === 200) {
       if (data.count === 0) {
-        categoriesTable.replaceChildren(...children); // clear this for safety
+        let rowEntry = document.createElement("tr");
+        rowEntry.innerHTML = `<td colspan=8 class="emptyList">No Categories!</td>`
+        categoriesTable.replaceChildren(...children, rowEntry); // clear this for safety
       } else {
         for (let i = 0; i < data.categories.length; i++) {
           const category = data.categories[i]
