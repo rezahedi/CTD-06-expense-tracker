@@ -115,12 +115,12 @@ button.link:hover{
       </div>
       <table id="expenses-table">
         <tr id="expenses-table-header">
-          <th>Title</th>
-          <th><button id="sort-amount" class="link">Amount</button></th>
+          <th><button class="link sort" data-field="title">Title</button></th>
+          <th><button class="link sort" data-field="amount">Amount</button></th>
           <th>Card</th>
           <th>Category</th>
-          <th><button id="sort-createdAt" class="link">Created At ▼</button></th>
-          <th><button id="sort-updatedAt" class="link">Modified At</button></th>
+          <th><button class="link sort" data-field="createdAt">Created At ▼</button></th>
+          <th><button class="link sort" data-field="updatedAt">Modified At</button></th>
           <th colspan="2">Actions</th>
         </tr>
       </table>
@@ -165,12 +165,12 @@ button.link:hover{
       <button id="show-expenses">Show Expense</button>
       <table id="categories-table">
         <tr id="categories-table-header">
-          <th><button id="sort-title" class="link">Title ▼</button></th>
-          <th>Expenses Count</th>
-          <th>Expenses Sum</th>
-          <th>Budget</th>
-          <th>Created At</th>
-          <th>Modified At</th>
+          <th><button class="link sort" data-field="title">Title ▼</button></th>
+          <th><button class="link sort" data-field="expensesCount">Expenses Count</button></th>
+          <th><button class="link sort" data-field="expensesSum">Expenses Sum</button></th>
+          <th><button class="link sort" data-field="budget">Budget</button></th>
+          <th><button class="link sort" data-field="createdAt">Created At</button></th>
+          <th><button class="link sort" data-field="updatedAt">Modified At</button></th>
           <th colspan="2">Actions</th>
         </tr>
       </table>

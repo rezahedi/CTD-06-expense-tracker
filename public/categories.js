@@ -16,7 +16,6 @@ let categoriesDiv = null;
 let categoriesTable = null;
 let categoriesTableHeader = null;
 let showExpensesBtn = null;
-let sortTitle = null;
 let sort = CATEGORY_DEFAULT_SORT;
 
 export const handleCategories = () => {
@@ -25,7 +24,6 @@ export const handleCategories = () => {
   const addCategory = document.getElementById("add-category");
   categoriesTable = document.getElementById("categories-table");
   categoriesTableHeader = document.getElementById("categories-table-header");
-  sortTitle = document.getElementById('sort-title')
 
   categoriesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -46,9 +44,21 @@ export const handleCategories = () => {
         e.target.innerHTML = 'Deleting ...'
         handleCategoryDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
 
-      } else if (e.target === sortTitle) {
-        sort = sort.includes('title') ? toggleSort(sort) : 'title'
-        sortTitle.textContent = sort==='title' ? 'Title ▼' : 'Title ▲'
+      // Sort
+      } else if (e.target.classList.contains("sort")) {
+        const fieldName = e.target.dataset.field;
+        // Toggle same field sort
+        if( sort.includes(fieldName) ) {
+          sort = toggleSort(sort);
+          e.target.textContent = e.target.textContent.slice(0, -2) + (sort===fieldName ? ' ▼' : ' ▲')
+        } else {
+          // Reset Prev sort UI
+          const prevSortElement = categoriesDiv.querySelector(`[data-field='${sort.replace('-', '')}']`)
+          prevSortElement.textContent = prevSortElement.textContent.slice(0, -2)
+          // New sort
+          sort = fieldName
+          e.target.textContent = e.target.textContent + ' ▼'
+        }
         showCategories()
 
       } else if (e.target.classList.contains("filter-by-category")) { // Show expenses linked to the clicked category

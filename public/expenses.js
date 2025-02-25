@@ -18,9 +18,6 @@ let expensesDiv = null;
 let expensesTable = null;
 let expensesTableHeader = null;
 let showCategoriesBtn = null;
-let sortAmount = null;
-let sortCreatedAt = null;
-let sortUpdatedAt = null;
 let sort = EXPENSE_DEFAULT_SORT;
 let categoryFilterId = null;
 let categoryFilterTitle = null;
@@ -34,9 +31,6 @@ export const handleExpenses = () => {
   const addExpense = document.getElementById("add-expense");
   expensesTable = document.getElementById("expenses-table");
   expensesTableHeader = document.getElementById("expenses-table-header");
-  sortAmount = document.getElementById('sort-amount')
-  sortCreatedAt = document.getElementById('sort-createdAt')
-  sortUpdatedAt = document.getElementById('sort-updatedAt')
   removeCategoryFilterBtn = document.getElementById('remove-category-filter')
   const prevBtn = document.getElementById('prevBtn')
   const nextBtn = document.getElementById('nextBtn')
@@ -60,23 +54,20 @@ export const handleExpenses = () => {
         handleDelete(e.target.dataset.id, ()=>e.target.parentNode.parentNode.remove());
 
       // Sort
-      } else if (e.target === sortAmount) {
-        sort = sort.includes('amount') ? toggleSort(sort) : 'amount'
-        sortAmount.textContent = sort==='amount' ? 'Amount ▼' : 'Amount ▲'
-        sortCreatedAt.textContent = 'Created At'
-        sortUpdatedAt.textContent = 'Modified At'
-        showExpenses()
-      } else if (e.target === sortCreatedAt) {
-        sort = sort.includes('createdAt') ? toggleSort(sort) : 'createdAt'
-        sortCreatedAt.textContent = sort==='createdAt' ? 'Created At ▼' : 'Created At ▲'
-        sortAmount.textContent = 'Amount'
-        sortUpdatedAt.textContent = 'Modified At'
-        showExpenses()
-      } else if (e.target === sortUpdatedAt) {
-        sort = sort.includes('updatedAt') ? toggleSort(sort) : 'updatedAt'
-        sortUpdatedAt.textContent = sort==='updatedAt' ? 'Modified At ▼' : 'Modified At ▲'
-        sortAmount.textContent = 'Amount'
-        sortCreatedAt.textContent = 'Created At'
+      } else if (e.target.classList.contains("sort")) {
+        const fieldName = e.target.dataset.field;
+        // Toggle same field sort
+        if( sort.includes(fieldName) ) {
+          sort = toggleSort(sort);
+          e.target.textContent = e.target.textContent.slice(0, -2) + (sort===fieldName ? ' ▼' : ' ▲')
+        } else {
+          // Reset Prev sort UI
+          const prevSortElement = expensesDiv.querySelector(`[data-field='${sort.replace('-', '')}']`)
+          prevSortElement.textContent = prevSortElement.textContent.slice(0, -2)
+          // New sort
+          sort = fieldName
+          e.target.textContent = e.target.textContent + ' ▼'
+        }
         showExpenses()
 
       // Filter expenses by clicked category
