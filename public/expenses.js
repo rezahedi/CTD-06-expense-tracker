@@ -10,7 +10,9 @@ import {
 import { showLoginRegister } from "./loginRegister.js";
 import { showAddEdit } from "./addEdit.js";
 import { showCategories } from "./categories.js";
+
 const EXPENSE_DEFAULT_SORT = 'createdAt'
+const PAGE_SIZE = 10;
 
 let expensesDiv = null;
 let expensesTable = null;
@@ -22,6 +24,8 @@ let sort = EXPENSE_DEFAULT_SORT;
 let categoryFilterId = null;
 let categoryFilterTitle = null;
 let removeCategoryFilterBtn = null;
+let page = 1;
+let size = PAGE_SIZE;
 
 export const handleExpenses = () => {
   expensesDiv = document.getElementById("expenses");
@@ -32,6 +36,9 @@ export const handleExpenses = () => {
   sortCreatedAt = document.getElementById('sort-createdAt')
   sortUpdatedAt = document.getElementById('sort-updatedAt')
   removeCategoryFilterBtn = document.getElementById('remove-category-filter')
+  const prevBtn = document.getElementById('prevBtn')
+  const nextBtn = document.getElementById('nextBtn')
+  const pageNum = document.getElementById('pageNum')
 
   expensesDiv.addEventListener("click", (e) => {
     if (inputEnabled && e.target.nodeName === "BUTTON") {
@@ -75,6 +82,18 @@ export const handleExpenses = () => {
         message.textContent = "You have been logged off.";
         emptyTables()
         showLoginRegister();
+
+      // Pagination
+      } else if (e.target === nextBtn) {
+        page++;
+        prevBtn.disabled = page===1
+        showExpenses()
+      } else if (e.target === prevBtn) {
+        if(page===0) return;
+        page--;
+        prevBtn.disabled = page===1
+        nextBtn.disabled = false;
+        showExpenses()
       }
     }
   });
@@ -135,6 +154,10 @@ export const showExpenses = async () => {
     // Sort
     params.append('sort', sort)
 
+    // Pagination
+    params.append('page', page)
+    params.append('size', size)
+
     const response = await fetch(`/api/v1/expenses?${params}`, {
       method: "GET",
       headers: {
@@ -148,7 +171,10 @@ export const showExpenses = async () => {
 
     if (response.status === 200) {
       if (data.count === 0) {
-        expensesTable.replaceChildren(...children); // clear this for safety
+        page--;
+        nextBtn.disabled = true;
+        prevBtn.disabled = page===1
+        // expensesTable.replaceChildren(...children); // clear this for safety
       } else {
         for (let i = 0; i < data.expenses.length; i++) {
           const expense = data.expenses[i]
@@ -169,6 +195,7 @@ export const showExpenses = async () => {
         }
         expensesTable.replaceChildren(...children);
       }
+      pageNum.textContent = `Page ${page}`
     } else {
       message.textContent = data.msg;
     }

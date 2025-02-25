@@ -2,9 +2,12 @@ const Expense = require('../models/Expense')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 const DEFAULT_SORT = 'createdAt'
+const PAGE_SIZE = 20;
 
 const getAllExpenses = async (req, res) => {
-  const { sort=DEFAULT_SORT, category='' } = req.query
+  const { sort=DEFAULT_SORT, category='', page=1, size=PAGE_SIZE } = req.query
+  const limit = size;
+  const skip = page*limit-limit;
 
   const filters = {
     userId: req.user.userId,
@@ -12,8 +15,8 @@ const getAllExpenses = async (req, res) => {
   if(category)
     filters.category = category
 
-  const expenses = await Expense.find(filters).populate('category', 'title').sort(sort)
-  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length })
+  const expenses = await Expense.find(filters).populate('category', 'title').sort(sort).skip(skip).limit(limit)
+  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length, ...{category, sort, skip, limit} })
 }
 
 const getExpense = async (req, res) => {

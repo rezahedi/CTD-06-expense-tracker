@@ -32,6 +32,11 @@ button.link{
 button.link:hover{
   text-decoration: none;
 }
+#pagination{
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
 </style>
   </head>
 
@@ -99,6 +104,11 @@ button.link:hover{
           <th colspan="2">Actions</th>
         </tr>
       </table>
+      <div id="pagination">
+        <button id="prevBtn" disabled>◄ Previous</button>
+        <span id="pageNum">Page 1</span>
+        <button id="nextBtn">Next ►</button>
+      </div>
       <button type="button" id="add-expense">add expense</button>
       <button type="button" class="logoff">log off</button>
     </div>
