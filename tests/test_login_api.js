@@ -2,6 +2,8 @@ const { app } = require("../app");
 const get_chai = require("./utils/get_chai");
 
 describe("test auth login api", function () {
+  let token;
+
   it("should return user's name and the token,  user's name should be 'Reza' and token should be a string with format '(.+)\.(.+)\.(.+)'", async () => {
     const { expect, request } = await get_chai();
     const req = request
@@ -21,6 +23,8 @@ describe("test auth login api", function () {
     expect(res.body).to.have.property("token");
     expect(res.body.token).to.be.a("string")
     expect(res.body.token.split(".")).to.have.lengthOf(3)
+
+    token = res.body.token;
   });
 
   it("should return 401 status code for unauthorize user", async () => {
@@ -33,4 +37,21 @@ describe("test auth login api", function () {
     const res = await req;
     expect(res).to.have.status(401);
   });
+
+  it("should return 200 status code and list of expenses", async () => {
+    const { expect, request } = await get_chai();
+    const req = request
+      .execute(app)
+      .get("/api/v1/expenses")
+      .set("Authorization", `Bearer ${token}`)
+      .send();
+    const res = await req;
+    expect(res).to.have.status(200)
+
+    expect(res.body).to.have.property("expenses");
+    expect(res.body.expenses).to.be.a("array")
+
+    expect(res.body).to.have.property("count");
+    expect(res.body.count).to.be.a("number")
+  })
 });
