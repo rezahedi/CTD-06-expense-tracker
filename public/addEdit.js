@@ -1,9 +1,11 @@
-import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
+import { enableInput, inputEnabled, setMessage, setDiv, token } from "./index.js";
 import { showExpenses } from "./expenses.js";
+import { getCategories, createCategorySelectElement, showAddCategoryPrompt } from "./categories.js";
 
 let addEditDiv = null;
 let title = null;
 let amount = null;
+let card = null;
 let description = null;
 let category = null;
 let addingExpense = null;
@@ -12,8 +14,10 @@ export const handleAddEdit = () => {
   addEditDiv = document.getElementById("edit-expense");
   title = document.getElementById("title");
   amount = document.getElementById("amount");
+  card = document.getElementById("card");
   description = document.getElementById("description");
   category = document.getElementById("category");
+  const addCategoryToSelect = document.getElementById("add-category-to-select");
   addingExpense = document.getElementById("adding-expense");
   const editCancel = document.getElementById("edit-cancel");
 
@@ -31,42 +35,48 @@ export const handleAddEdit = () => {
         }
 
         try {
+          const bodyObject = {
+            title: title.value,
+            amount: amount.value,
+            card: card.value,
+            description: description.value,
+          }
+          if(category.value) bodyObject.category = category.value
+
           const response = await fetch(url, {
             method: method,
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              title: title.value,
-              amount: amount.value,
-              description: description.value,
-              category: category.value,
-            }),
+            body: JSON.stringify(bodyObject),
           });
   
           const data = await response.json();
           if (response.status === 200 || response.status === 201) {
             // success codes: 201 = create / 200 = update
-            message.textContent = (response.status === 200 ? "The expense entry was updated." : "The expense entry was created.");
+            setMessage(response.status === 200 ? "The expense entry was updated." : "The expense entry was created.");
   
             title.value = "";
             amount.value = "";
+            card.value = "";
             description.value = "";
             category.value = "";
   
             showExpenses();
           } else {
-            message.textContent = data.msg;
+            setMessage(data.msg, true);
           }
         } catch (err) {
           console.log(err);
-          message.textContent = "A communication error occurred.";
+          setMessage("A communication error occurred.", true);
         }
   
         enableInput(true);
+      } else if(e.target === addCategoryToSelect) {
+        e.preventDefault()
+        showAddCategoryPrompt(category)
       } else if (e.target === editCancel) {
-        message.textContent = "";
         showExpenses();
       }
     }
@@ -74,19 +84,22 @@ export const handleAddEdit = () => {
 };
 
 export const showAddEdit = async (expenseId) => {
-  if (!expenseId) {
-    title.value = "";
-    amount.value = "";
-    description.value = "";
-    category.value = "";
-    addingExpense.textContent = "add";
-    message.textContent = "";
+  try {
+    const categories = await getCategories();
 
-    setDiv(addEditDiv);
-  } else {
-    enableInput(false);
+    if (!expenseId) {
+      title.value = "";
+      amount.value = "";
+      card.value = "";
+      description.value = "";
+      addingExpense.textContent = "add";
+  
+      createCategorySelectElement(categories)
 
-    try {
+      setDiv(addEditDiv);
+    } else {
+      enableInput(false);
+
       const response = await fetch(`/api/v1/expenses/${expenseId}`, {
         method: "GET",
         headers: {
@@ -99,24 +112,27 @@ export const showAddEdit = async (expenseId) => {
       if (response.status === 200) {
         title.value = data.expense.title;
         amount.value = data.expense.amount;
+        card.value = data.expense.card || '';
         description.value = data.expense.description;
-        category.value = data.expense.category;
+        // category.value = data.expense.category;
         addingExpense.textContent = "update";
-        message.textContent = "";
         addEditDiv.dataset.id = expenseId;
+
+        createCategorySelectElement(categories, data.expense.category?._id || '')
 
         setDiv(addEditDiv);
       } else {
         // might happen if the list has been updated since last display
-        message.textContent = "The Expense entry was not found";
+        setMessage("The Expense entry was not found", true);
         showExpenses();
       }
-    } catch (err) {
-      console.log(err);
-      message.textContent = "A communications error has occurred.";
-      showExpenses();
-    }
 
-    enableInput(true);
+      enableInput(true);
+    }
+  } catch (err) {
+    console.log(err);
+    setMessage("A communications error has occurred.", true);
+    showExpenses();
   }
+
 };

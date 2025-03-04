@@ -85,7 +85,14 @@ paths:
         - Expenses
       summary: Get All Expenses
       operationId: GetAllExpenses
-      parameters: []
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: createdAt
+          required: false
+          description: Field's name to sort, For descending use dash character at the beginning, for example '-createdAt'
       responses:
         '200':
           description: ''

@@ -21,14 +21,72 @@ th, td{
   padding:.5rem 1rem;
   text-wrap:nowrap;
 }
+.emptyList{
+  text-align: center;
+  padding:40px;
+}
+button{
+  cursor: pointer;
+}
+button.link{
+  border:none;
+  background: none;
+  color:blue;
+  text-decoration: underline;
+  cursor: pointer;
+  padding:0;
+}
+button.link:hover{
+  text-decoration: none;
+}
+header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#message{
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-size: larger;
+  background-color: #a2ffb2;
+  padding:5px 10px;
+  border-radius:5px;
+  box-shadow: 5px 5px 10px #0000006b;
+}
+#pagination{
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+.toolBar{
+  display: flex;justify-content: space-between;
+}
+#filter-status{
+  visibility: hidden;
+}
+.search{
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+}
+.rowSelector{
+  text-align: right;
+}
 </style>
   </head>
 
   <body>
-    <h1>Expenses List</h1>
-    <hr />
+    <header>
+      <h1>Expenses Tracker</h1>
+      <div id="profile">
+        <span></span>
+        <button type="button" class="logoff">log off</button>
+      </div>
+    </header>
     <p id="message"></p>
-    <hr />
     <div id="login-register" style="display:none;">
       <button type="button" id="login">login</button>
       <button type="button" id="register">register</button>
@@ -70,19 +128,41 @@ th, td{
       </form>
     </div>
     <div id="expenses" style="display:none;">
-      <p id="expenses-message"></p>
+      <button id="show-categories">Show Categories</button>
+      <div class="toolBar">
+        <div id="filter-status">Filtered by '<span></span>' <button id='remove-category-filter'>Remove</button></div>
+        <div class="search"><button id="clearSearch" style="display: none">x</button><input type="text" id="searchInput" placeholder="Search in title ..." /><button id="searchBtn">Find</button></div>
+        <div class="rowSelector">
+          <label>
+            Rows per page:
+            <select id="pageLimitSelector">
+              <option value="2">2 rows</option>
+              <option value="5">5 rows</option>
+              <option value="10" selected>10 rows</option>
+              <option value="20">20 rows</option>
+            </select>
+          </label>
+        </div>
+      </div>
       <table id="expenses-table">
         <tr id="expenses-table-header">
-          <th>Title</th>
-          <th>Amount</th>
-          <th>Category</th>
-          <th>Created At</th>
-          <th>Modified At</th>
+          <th><button class="link sort" data-field="title">Title</button></th>
+          <th><button class="link sort" data-field="amount">Amount</button></th>
+          <th><button class="link sort" data-field="card">Card</button></th>
+          <th><button class="link sort" data-field="category">Category</button></th>
+          <th>User</th>
+          <th><button class="link sort" data-field="createdAt">Created At ▼</button></th>
+          <th><button class="link sort" data-field="updatedAt">Modified At</button></th>
           <th colspan="2">Actions</th>
         </tr>
       </table>
+      <div id="pagination">
+        <button id="prevBtn" disabled>◄ Previous</button>
+        <span id="pageNum">Page 1</span>
+        <button id="nextBtn">Next ►</button>
+      </div>
       <button type="button" id="add-expense">add expense</button>
-      <button type="button" id="logoff">log off</button>
+      <button type="button" class="logoff">log off</button>
     </div>
     <div id="edit-expense" style="display:none;">
       <form>
@@ -95,6 +175,10 @@ th, td{
           <input type="text" id="amount" />
         </div>
         <div>
+          <label for="card">Card Name:</label>
+          <input type="text" id="card" />
+        </div>
+        <div>
           <label for="description">Description:</label>
           <textarea id="description" rows="4"></textarea>
         </div>
@@ -102,19 +186,42 @@ th, td{
           <label for="category">Category:</label>
           <select id="category">
             <option value="">Select a category</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Rent">Rent</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Health">Health</option>
-            <option value="Utilities">Utilities</option>
-            <option value="Bills">Bills</option>
-            <option value="Subscriptions">Subscriptions</option>
-            <option value="Other">Other</option>
-          </select>
+          </select> <button id="add-category-to-select">Add Category</button>
         </div>
         <button type="button" id="adding-expense">add</button>
         <button type="button" id="edit-cancel">cancel</button>
+      </form>
+    </div>
+
+    <div id="categories" style="display:none;">
+      <button id="show-expenses">Show Expense</button>
+      <table id="categories-table">
+        <tr id="categories-table-header">
+          <th><button class="link sort" data-field="title">Title ▼</button></th>
+          <th><button class="link sort" data-field="expensesCount">Expenses Count</button></th>
+          <th><button class="link sort" data-field="expensesSum">Expenses Sum</button></th>
+          <th><button class="link sort" data-field="budget">Budget</button></th>
+          <th>User</th>
+          <th><button class="link sort" data-field="createdAt">Created At</button></th>
+          <th><button class="link sort" data-field="updatedAt">Modified At</button></th>
+          <th colspan="2">Actions</th>
+        </tr>
+      </table>
+      <button type="button" id="add-category">add category</button>
+      <button type="button" class="logoff">log off</button>
+    </div>
+    <div id="edit-category" style="display:none;">
+      <form>
+        <div>
+          <label for="catTitle">Title:</label>
+          <input type="text" id="catTitle" />
+        </div>
+        <div>
+          <label for="catBudget">Budget:</label>
+          <input type="text" id="catBudget" />
+        </div>
+        <button type="button" id="adding-category">add</button>
+        <button type="button" id="cat-edit-cancel">cancel</button>
       </form>
     </div>
     <script src="./index.js" type="module"></script>

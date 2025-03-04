@@ -20,10 +20,18 @@ const ExpenseSchema = new mongoose.Schema({
     type: String,
     maxlength: 255
   },
-  category: {
+  card: {
     type: String,
-    required: [true, 'Provide category of expense'],
-    enum: ['Groceries', 'Rent', 'Entertainment', 'Transportation', 'Health', 'Utilities', 'Bills', 'Subscriptions', 'Other']
+    minlength: [3, 'Title min length is 3'],
+    maxlength: [20, 'Title max length is 20'],
+  },
+  category: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Category',
+    // required: [true, 'Provide category'],
+    // type: String,
+    // required: [true, 'Provide category of expense'],
+    // enum: ['Groceries', 'Rent', 'Entertainment', 'Transportation', 'Health', 'Utilities', 'Bills', 'Subscriptions', 'Other']
   },
 }, {
   timestamps: true

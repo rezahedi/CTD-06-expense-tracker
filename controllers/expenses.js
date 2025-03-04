@@ -1,10 +1,25 @@
 const Expense = require('../models/Expense')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
+const DEFAULT_SORT = 'createdAt'
+const PAGE_SIZE = 20;
 
 const getAllExpenses = async (req, res) => {
-  const expenses = await Expense.find({ userId: req.user.userId }).populate('userId', 'name').sort('createdAt')
-  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length })
+  const { sort=DEFAULT_SORT, category='', search='', page=1, size=PAGE_SIZE } = req.query
+  const limit = size;
+  const skip = page*limit-limit;
+  const searchTerm = search.trim()
+
+  const filters = {
+    userId: req.user.userId,
+  }
+  if(category)
+    filters.category = category
+  if(searchTerm)
+    filters.title = { $regex: searchTerm, $options: 'i' }
+
+  const expenses = await Expense.find(filters).populate('category', 'title').populate('userId', 'name').sort(sort).skip(skip).limit(limit)
+  res.status( StatusCodes.OK ).json({ expenses, count: expenses.length, ...{category, searchTerm, sort, skip, limit} })
 }
 
 const getExpense = async (req, res) => {
@@ -16,7 +31,7 @@ const getExpense = async (req, res) => {
   const expense = await Expense.findOne({
     userId,
     _id: expenseId
-  }).populate('userId', 'name')
+  }).populate('category', 'title')
 
   if ( !expense ) {
     throw new NotFoundError(`No expense with id ${expenseId}`)
@@ -48,6 +63,10 @@ const updateExpense = async (req, res) => {
   if ( amount === undefined ) {
     throw new BadRequestError('Amount field is required')
   }
+
+  // Unset category if undefined
+  if( req.body.category === undefined )
+    req.body.$unset = {category: 1}
 
   const expense = await Expense.findByIdAndUpdate(
     {
