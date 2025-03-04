@@ -10,9 +10,9 @@ let browser = null;
 // Launch the browser and open a new blank page
 describe("expenses puppeteer test", function () {
   before(async function () {
-    this.timeout(10000);
+    this.timeout(30000);
     //await sleeper(5000)
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({headless: false, slowMo: 20});
     page = await browser.newPage();
     await page.goto("http://localhost:3000");
   });
@@ -61,7 +61,7 @@ describe("expenses puppeteer test", function () {
     });
   });
   describe("Add expense test 2", function () {
-    this.timeout(10000);
+    this.timeout(30000);
     it("resolves all the fields in add expense page", async () => {
       await page.waitForSelector("div#edit-expense", {visible: true})
       this.title = await page.waitForSelector('input#title');
